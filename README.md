@@ -84,4 +84,4 @@ Some text to show that the reference links can follow later.
 [1]: http://slashdot.org
 [link text itself]: http://www.reddit.com
 
-[a relative link] https://www.notion.so/Group-20-28a472eb6a48461db5deb23b2c80a0fa
+[a relative link] (https://www.notion.so/Group-20-28a472eb6a48461db5deb23b2c80a0fa)
