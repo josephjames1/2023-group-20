@@ -59,5 +59,6 @@
 
 - The link to maze game demo video is behind:
     https://youtu.be/wd0TO62prDM
+    <iframe width="1280" height="873" src="https://www.youtube.com/embed/wd0TO62prDM" title="Maze Game Demo" allowfullscreen></iframe>
 ---
 
