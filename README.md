@@ -59,6 +59,6 @@
 
 - The link to maze game demo video is behind:
     - <iframe width="576" height="432" src="https://www.youtube.com/embed/wd0TO62prDM" title="Maze Game Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    
+    https://www.notion.so/Group-20-28a472eb6a48461db5deb23b2c80a0fa?pvs=4#b9804cd35642450fb7983c8b1f73be6d
 ---
 
