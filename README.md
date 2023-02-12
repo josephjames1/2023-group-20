@@ -57,8 +57,12 @@
 
 # *🚀 It’s go time!*
 
-- The link to maze game demo video is behind:
+- ## The link to maze game demo video is behind:
  
     [![Video Link](https://img.youtube.com/vi/wd0TO62prDM/0.jpg)](https://youtu.be/wd0TO62prDM)
+    
+- ## Case diagram
+    <img width="744" alt="Screenshot 2023-02-12 at 18 49 07" src="https://user-images.githubusercontent.com/116745175/218330755-625ddec5-4bd4-4b3a-ae86-6186261f99aa.png">
+
 ---
 
