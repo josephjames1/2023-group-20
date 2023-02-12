@@ -58,7 +58,6 @@
 # *🚀 It’s go time!*
 
 - The link to maze game demo video is behind:
-    <iframe width="1280" height="873" src="https://www.youtube.com/embed/wd0TO62prDM" title="Maze Game Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    https://www.youtube.com/watch?v=wd0TO62prDM&ab_channel=zhixiangli
+    https://youtu.be/wd0TO62prDM
 ---
 
