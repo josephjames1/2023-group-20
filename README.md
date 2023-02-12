@@ -12,8 +12,7 @@
 | Adam sommers | https://github.com/adam-sommers |
 | Yuan Quan | https://github.com/WayfarerYuan |
 
-![team photo.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/afc9a812-421b-4e31-a74b-8cc008c0657b/team_photo.jpg)
-
+![team_photo](https://user-images.githubusercontent.com/116745175/218328551-48399672-54a6-4e18-80ef-9be619b07cb9.jpg)
 ---
 
 # 💭 Original Proposals
