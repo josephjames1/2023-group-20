@@ -58,6 +58,7 @@ class character{
   
   void displayAnimal(){
     fill(1, 1, 1);
+    //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
     int y = rowNum*(height/rows)+(height/rows)/2;
     ellipse(x, y, 20, 20);
