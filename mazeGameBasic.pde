@@ -17,18 +17,6 @@ void setup() {
 
     }
   }
-  //create walls for maze
- /*
- grid[0][1].setWall();
- grid[0][2].setWall();
- grid[0][3].setWall();
- grid[1][3].setWall();
- grid[2][3].setWall();
- grid[3][3].setWall();
- grid[4][3].setWall();
- grid[5][3].setWall();
- grid[6][3].setWall();
- */
  
  String[] mazeText = {
             " ###################",
@@ -65,7 +53,21 @@ void setup() {
 }
 
 void draw() {
-  background(255);
+  if(mainOrGame==0){
+    fill(255);
+    rect(0,0,400,500);
+    if(step==0){
+      initializeWindow();
+    }else if(step==1){
+      mainMenu();
+    }else if(step==2){
+     chooseAnimal();
+    }else if(step==3){
+      chooseLevel();
+    }
+    return;
+  }
+
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       if (grid[i][j].isWall()){
@@ -76,6 +78,7 @@ void draw() {
       }
     }
   }
+  
   animal.displayAnimal();
   ghost.displayGhost();
   if (frameCount % 30 == 0) {

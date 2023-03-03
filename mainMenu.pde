@@ -2,7 +2,7 @@
 //1 represents tiger!
 //2 represents rabbit!
 //3 represents rat!
-int animal=0;
+int role=0;
 //0 represents not choose now!
 //1 represents easy!
 //2 represents medium!
@@ -13,28 +13,30 @@ int level=0;
 //2 represents choose animal
 //3 represents choose level
 int step=0;
+//1 represetn mainmenu;
+//2 represents game;
+int mainOrGame=0;
+
+//void setup(){
+//  size(400,500);
+//  background(255);
+//}
 
 
-void setup(){
-  size(400,500);
-  background(255);
-}
-
-
-void draw()
-{
-  fill(255);
-  rect(0,0,400,500);
-  if(step==0){
-    initializeWindow();
-  }else if(step==1){
-    mainMenu();
-  }else if(step==2){
-   chooseAnimal();
-  }else if(step==3){
-    chooseLevel();
-  }
-}
+//void draw()
+//{
+//  fill(255);
+//  rect(0,0,400,500);
+//  if(step==0){
+//    initializeWindow();
+//  }else if(step==1){
+//    mainMenu();
+//  }else if(step==2){
+//   chooseAnimal();
+//  }else if(step==3){
+//    chooseLevel();
+//  }
+//}
 
 void initializeWindow()
 {
@@ -57,7 +59,7 @@ void mainMenu()
   
   textSize(30);
   //choose animal
-  if(animal!=0){
+  if(role!=0){
     fill(255,0,0);
   }else{
     fill(255);
@@ -86,13 +88,18 @@ void mainMenu()
   rect(250,400,100,50);
   fill(0);
   text("BEGIN ", 260, 435);
+  
+  if(role==0 || level==0){
+     textSize(20);
+     text("Plesae finish choose animal and level!", 50, 350);
+  }
 }
 
 void chooseAnimal()
 {
   textSize(30);
   //TIGER
-  if(animal==1){
+  if(role==1){
     fill(255,0,0);
   }else{
     fill(255);
@@ -102,7 +109,7 @@ void chooseAnimal()
   text("TIGER", 160, 100);
   
   //RABBIT
-  if(animal==2){
+  if(role==2){
     fill(255,0,0);
   }else{
     fill(255);
@@ -112,7 +119,7 @@ void chooseAnimal()
   text("RABBIT", 160, 220);
   
   //RAT
-  if(animal==3){
+  if(role==3){
     fill(255,0,0);
   }else{
     fill(255);
@@ -189,22 +196,24 @@ void mousePressed() {
     }
     if((mouseX>=50 && mouseX<=150)&&(mouseY>=400 && mouseY<=450)){
       step=0;
-      animal=0;
+      role=0;
       level=0;
       return;
     }
     if((mouseX>=250 && mouseX<=350)&&(mouseY>=400 && mouseY<=450)){
-      step=0;
+      if(role!=0 && level!=0){
+        mainOrGame=2;
+      }
       return;
     }
   }
   if(step==2){
     if((mouseX>=100 && mouseX<=300)&&(mouseY>=50 && mouseY<=130)){
-      animal=1;
+      role=1;
     }else if((mouseX>=100 && mouseX<=300)&&(mouseY>=170 && mouseY<=250)){
-      animal=2;
+      role=2;
     }else if((mouseX>=100 && mouseX<=300)&&(mouseY>=290 && mouseY<=370)){
-      animal=3;
+      role=3;
     }
     if((mouseX>=50 && mouseX<=150)&&(mouseY>=400 && mouseY<=450)){
       step=1;
@@ -224,5 +233,5 @@ void mousePressed() {
       return;
     }
   }
-  loop();
+  draw();
 }
