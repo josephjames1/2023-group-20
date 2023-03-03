@@ -38,8 +38,14 @@ void draw()
 
 void initializeWindow()
 {
-  textSize(100);
+  //exit
+  fill(255,0,0);
+  rect(0,0,20,20);
   fill(0);
+  textSize(20);
+  text("X", 5, 17);
+
+  textSize(100);
   text("MAZE", 80, 200);
   text("GAME !", 60, 300);
   textSize(20);
@@ -48,6 +54,7 @@ void initializeWindow()
 
 void mainMenu()
 {
+  
   textSize(30);
   //choose animal
   if(animal!=0){
@@ -164,7 +171,11 @@ void chooseLevel()
 
 void mousePressed() {
   if(step==0){
-    step=1;
+    if((mouseX>=0 && mouseX<=20)&&(mouseY>=0 && mouseY<=20)){
+      exit();
+    }else{
+      step=1;
+    }
     return;
   }
   if(step==1){
@@ -178,6 +189,8 @@ void mousePressed() {
     }
     if((mouseX>=50 && mouseX<=150)&&(mouseY>=400 && mouseY<=450)){
       step=0;
+      animal=0;
+      level=0;
       return;
     }
     if((mouseX>=250 && mouseX<=350)&&(mouseY>=400 && mouseY<=450)){
