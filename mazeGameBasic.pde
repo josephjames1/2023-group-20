@@ -52,8 +52,8 @@ void setup() {
             "#     ###          #",
             "##################  "
         };
-   for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+   for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 if (mazeText[i].charAt(j) == '#')
                 {
                   grid[j][i].setWall();
