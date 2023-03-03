@@ -1,5 +1,6 @@
 cell[][] grid;
 character animal;
+Ghost ghost;
 int cols = 20;
 int rows = 20;
 
@@ -17,6 +18,7 @@ void setup() {
     }
   }
   //create walls for maze
+ /*
  grid[0][1].setWall();
  grid[0][2].setWall();
  grid[0][3].setWall();
@@ -26,6 +28,40 @@ void setup() {
  grid[4][3].setWall();
  grid[5][3].setWall();
  grid[6][3].setWall();
+ */
+ 
+ String[] mazeText = {
+            " ###################",
+            "            #      #",
+            "###### ###### #### #",
+            "## ### ###### #    #",
+            "## #   #   ## # # ##",
+            "## # ### # ## # #  #",
+            "## #     #    # ####",
+            "## ###### # ### ## #",
+            "#        ## ### ## #",
+            "###### ###### # # ##",
+            "#      #      # #  #",
+            "# ##### ####### # ##",
+            "# ###    #      #  #",
+            "# # ###### ###### ##",
+            "# #  ##  #         #",
+            "# ## ## ###### #####",
+            "# #  # ##          #",
+            "# # ## ## ###### ###",
+            "#     ###          #",
+            "##################  "
+        };
+   for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 20; j++) {
+                if (mazeText[i].charAt(j) == '#')
+                {
+                  grid[j][i].setWall();
+                }
+            }
+        }
+ 
+ ghost = new Ghost();
 }
 
 void draw() {
@@ -41,6 +77,10 @@ void draw() {
     }
   }
   animal.displayAnimal();
+  ghost.displayGhost();
+  if (frameCount % 30 == 0) {
+    ghost.moveGhost();
+  }
 }
 
 void keyPressed(){
@@ -164,4 +204,60 @@ class cell {
     wall = true;
   }
   
+}
+
+class Ghost {
+  int rowNum;
+  int colNum;
+  
+  Ghost(){
+    do {
+      rowNum = int (random(rows));
+      colNum = int (random(cols));
+    } while (grid[colNum][rowNum].isWall());
+  }
+
+  void displayGhost(){
+    fill(255, 192, 203);
+    //this puts the ellipse in the center of its current cell
+    int x = colNum*(width/cols)+ (width/cols)/2;
+    int y = rowNum*(height/rows)+(height/rows)/2;
+    ellipse(x, y, 20, 20);
+  }
+  
+  void setRowNum(int row){
+    rowNum = row;
+  }
+  
+  int getRowNum(){
+    return rowNum;
+  }
+  
+  void setColNum(int col){
+    colNum = col;
+  }
+  
+  int getColNum(){
+    return colNum;
+  }
+  
+  void moveGhost(){
+    if (!isMoved()) return;
+    int direction = int (random(2));
+    int moveRow = rowNum;
+    int moveCol = colNum;
+    if (direction == 0) moveRow = int (random(-2, 2)) + rowNum;
+    if (direction == 1) moveCol = int (random(-2, 2)) + colNum;
+    if (moveRow < 0 || moveRow > rows || moveCol < 0 || moveCol > cols) return;
+    if (!grid[moveCol][moveRow].isWall()) {
+      rowNum = moveRow;
+      colNum = moveCol;
+    }  
+  }
+  
+  boolean isMoved(){
+    int number = int (random(2));
+    boolean res = number == 1 ? true : false;
+    return res;
+ }
 }
