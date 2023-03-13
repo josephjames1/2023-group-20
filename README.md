@@ -66,3 +66,78 @@
 
 ---
 
+# Week 7 - Think Aloud
+
+### User 0:
+
+**entrance →** 
+
+basic colors for begining
+
+no much interface 
+
+**main menu →** 
+
+“go back issue”: feeling confused about the interaction when starting the game
+
+**main game →** 
+
+basic color/ animation for game
+
+moving is simple enough
+
+fair difficulty
+
+glad the monster is moving
+
+need an ending 
+
+need to implement the game features
+
+### User 1:
+
+**entrance →** 
+
+Clear
+
+“minimalistic”
+
+**main menu →** 
+
+need guidance message,
+
+colour are basic, 
+
+“go back issue”
+
+**main game →** 
+
+don’t understand what the game is for, 
+
+recognise the monster but not clear what its for, 
+
+found difficult to solve the maze with the monsters existing 
+
+begins and ends needs to be signed
+
+expecting multiple levels
+
+attacked by a ghost → start over from the beginning again
+
+control with arrow keys are fine
+
+### User 2:
+
+**entrance →** 
+
+Think should be able to click anywhere to start
+
+**menu →** 
+
+Going back issue
+
+**main game →** 
+
+Need to guide users how to move
+
+Don’t know what the characters/monsters for
