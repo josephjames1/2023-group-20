@@ -66,7 +66,7 @@
 
 ---
 
-# Week 7 - Think Aloud
+# *Week 7 - Think Aloud*
 
 ### User 0:
 
