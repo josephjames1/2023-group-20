@@ -1,13 +1,13 @@
 cell[][] grid;
 character animal;
 Ghost ghost;
-int cols = 20;
-int rows = 20;
+int cols = 21;
+int rows = 21;
 
 void setup() {
   size(600, 600);
-  int rowStart = 0;
-  int colStart = 0;
+  int rowStart = 1;
+  int colStart = 1;
   grid = new cell[cols][rows];
   animal = new character(rowStart, colStart);
   for (int i = 0; i < cols; i++) {
@@ -18,36 +18,49 @@ void setup() {
     }
   }
  
- String[] mazeText = {
-            " ###################",
-            "            #      #",
-            "###### ###### #### #",
-            "## ### ###### #    #",
-            "## #   #   ## # # ##",
-            "## # ### # ## # #  #",
-            "## #     #    # ####",
-            "## ###### # ### ## #",
-            "#        ## ### ## #",
-            "###### ###### # # ##",
-            "#      #      # #  #",
-            "# ##### ####### # ##",
-            "# ###    #      #  #",
-            "# # ###### ###### ##",
-            "# #  ##  #         #",
-            "# ## ## ###### #####",
-            "# #  # ##          #",
-            "# # ## ## ###### ###",
-            "#     ###          #",
-            "##################  "
-        };
-   for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (mazeText[i].charAt(j) == '#')
-                {
-                  grid[j][i].setWall();
-                }
-            }
+ //String[] mazeText = {
+ //           " ###################",
+ //           "            #      #",
+ //           "###### ###### #### #",
+ //           "## ### ###### #    #",
+ //           "## #   #   ## # # ##",
+ //           "## # ### # ## # #  #",
+ //           "## #     #    # ####",
+ //           "## ###### # ### ## #",
+ //           "#        ## ### ## #",
+ //           "###### ###### # # ##",
+ //           "#      #      # #  #",
+ //           "# ##### ####### # ##",
+ //           "# ###    #      #  #",
+ //           "# # ###### ###### ##",
+ //           "# #  ##  #         #",
+ //           "# ## ## ###### #####",
+ //           "# #  # ##          #",
+ //           "# # ## ## ###### ###",
+ //           "#     ###          #",
+ //           "##################  "
+ //       };
+ //  for (int i = 0; i < rows; i++) {
+ //           for (int j = 0; j < cols; j++) {
+ //               if (mazeText[i].charAt(j) == '#')
+ //               {
+ //                 grid[j][i].setWall();
+ //               }
+ //           }
+ //       }
+ // String[] mazeText = MazeGenerator.generateMaze(rows, cols);
+  BetaMazeGenerator mazeGenerator = new BetaMazeGenerator(rows, cols);
+  mazeGenerator.generateMaze(0, 1);
+  mazeGenerator.printMaze();
+  String[] mazeText = mazeGenerator.getMaze();
+
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+        if (mazeText[i].charAt(j) == '#') {
+            grid[j][i].setWall();
         }
+    }
+  }
  
  ghost = new Ghost();
 }
@@ -59,7 +72,7 @@ void draw() {
     if(step==0){
       initializeWindow();
     }else if(step==1){
-      mainMenu();
+      mainGameMenu();
     }else if(step==2){
      chooseAnimal();
     }else if(step==3){
