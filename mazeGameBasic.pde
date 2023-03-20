@@ -1,11 +1,34 @@
 cell[][] grid;
 character animal;
 Ghost ghost;
-int cols = 21;
-int rows = 21;
+int cols = 11;
+int rows = 11;
 
 void setup() {
-  size(600, 600);
+  // Swtich game level based on user int level from mainMenu
+  int level = mainMenu.getLevel();
+  System.out.println(level);
+  switch (level) {
+    case 1:
+    {
+      break;
+    }
+    case 2:
+    {
+      rows += 10;
+      cols += 10;
+      
+      break;
+    }
+    case 3:
+    {
+      rows += 20;
+      cols += 20;
+      break;
+    }
+    default: break;
+  }
+  size(800, 800);
   int rowStart = 1;
   int colStart = 1;
   grid = new cell[cols][rows];
@@ -49,6 +72,8 @@ void setup() {
  //           }
  //       }
  // String[] mazeText = MazeGenerator.generateMaze(rows, cols);
+  //BetaMazeGenerator mazeGenerator = new BetaMazeGenerator(rows, cols);
+  // Generate a maze based on the int level from mainMenu
   BetaMazeGenerator mazeGenerator = new BetaMazeGenerator(rows, cols);
   mazeGenerator.generateMaze(0, 1);
   mazeGenerator.printMaze();
@@ -117,7 +142,7 @@ class character{
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
     int y = rowNum*(height/rows)+(height/rows)/2;
-    ellipse(x, y, 20, 20);
+    ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
   void setRowNum(int row){
@@ -238,7 +263,7 @@ class Ghost {
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
     int y = rowNum*(height/rows)+(height/rows)/2;
-    ellipse(x, y, 20, 20);
+    ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
   void setRowNum(int row){
