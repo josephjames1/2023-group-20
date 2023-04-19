@@ -2,6 +2,11 @@ cell[][] grid;
 character animal;
 Ghost ghost;
 Key theKey;
+Key keyTwo;
+Key keyThree;
+Key keyFour;
+
+
 int cols = 11;
 int rows = 11;
 
@@ -90,7 +95,13 @@ void setup() {
  
  ghost = new Ghost();
  theKey = new Key(0, 1);
- grid[0][1].setKey();
+ grid[0][1].setKey(theKey);
+ keyTwo = new Key();
+ grid[keyTwo.colNum][keyTwo.rowNum].setKey(keyTwo);
+ keyThree = new Key();
+ grid[keyThree.colNum][keyThree.rowNum].setKey(keyThree);
+ keyFour = new Key();
+ grid[keyFour.colNum][keyFour.rowNum].setKey(keyFour);
 }
 
 void draw() {
@@ -123,6 +134,9 @@ void draw() {
   animal.displayAnimal();
   ghost.displayGhost();
   theKey.displayKey();
+  keyTwo.displayKey();
+  keyThree.displayKey();
+  keyFour.displayKey();
   if (frameCount % 30 == 0) {
     ghost.moveGhost();
   }
@@ -217,6 +231,7 @@ class character{
     }
     if (grid[colNum][rowNum].hasKey()){
       getKey();
+      grid[colNum][rowNum].aKey.getKey();
       theKey.getKey();
       grid[colNum][rowNum].removeKey();
     }
@@ -239,6 +254,7 @@ class cell {
   int w, h;
   int row, col;
   boolean hasKey = false;
+  Key aKey; 
  
   cell (int x, int y, int w, int h, int row, int col) {
     this.x = x;
@@ -279,8 +295,9 @@ class cell {
     else return false;
   }
   
-  void setKey(){
+  void setKey(Key someKey){
     hasKey = true;
+    aKey = someKey;
   }
   
   void removeKey(){
@@ -354,6 +371,13 @@ class Key{
     rowNum = row;
     colNum = col;
     obtained = false;
+  }
+  
+  Key(){
+    do {
+      rowNum = int (random(rows));
+      colNum = int (random(cols));
+    } while (grid[colNum][rowNum].isWall() || grid[colNum][rowNum].hasKey());
   }
   
   void displayKey(){
