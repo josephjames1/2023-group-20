@@ -94,3 +94,11 @@ public class BetaMazeGenerator {
     //    }
     //}
 }
+
+public int[] getMazeExit() {
+        int[] end = new int[2];
+        end[0] = endX;
+        end[1] = endY;
+        return end;
+        }
+

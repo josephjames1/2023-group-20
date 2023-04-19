@@ -5,15 +5,13 @@ Key theKey;
 Key keyTwo;
 Key keyThree;
 Key keyFour;
-
-
 int cols = 11;
 int rows = 11;
 
 void setup() {
   // Swtich game level based on user int level from mainMenu
-  int level = mainMenu.getLevel();
-  System.out.println(level);
+  int level = getLevel();
+  System.out.println("Level: "+level);
   switch (level) {
     case 1:
     {
@@ -42,7 +40,7 @@ void setup() {
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       ///intialize cell objects 
-      grid[i][j] = new cell(i*(width/cols), j*(height/rows), width/cols, height/rows, i, j);
+      grid[i][j] = new cell(i*(width/cols), 40+j*(height/rows), width/cols, height/rows, i, j);
 
     }
   }
@@ -140,6 +138,8 @@ void draw() {
   if (frameCount % 30 == 0) {
     ghost.moveGhost();
   }
+
+  drawMenuBar();
 }
 
 void keyPressed(){
@@ -161,7 +161,7 @@ class character{
     fill(1, 1, 1);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = rowNum*(height/rows)+(height/rows)/2;
+    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
     ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
@@ -321,7 +321,7 @@ class Ghost {
     fill(255, 192, 203);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = rowNum*(height/rows)+(height/rows)/2;
+    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
     ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
@@ -348,7 +348,7 @@ class Ghost {
     int moveCol = colNum;
     if (direction == 0) moveRow = int (random(-2, 2)) + rowNum;
     if (direction == 1) moveCol = int (random(-2, 2)) + colNum;
-    if (moveRow < 0 || moveRow > rows || moveCol < 0 || moveCol > cols) return;
+    if (moveRow < 0 || moveRow >= rows || moveCol < 0 || moveCol >= cols) return;
     if (!grid[moveCol][moveRow].isWall()) {
       rowNum = moveRow;
       colNum = moveCol;

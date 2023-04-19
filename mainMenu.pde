@@ -236,6 +236,13 @@ void mousePressed() {
       return;
     }
   }
+    if (isButtonClicked(pauseButtonX, pauseButtonY, buttonWidth, buttonHeight)) {
+    // Pause the game
+  } else if (isButtonClicked(restartButtonX, restartButtonY, buttonWidth, buttonHeight)) {
+    // Restart the game
+  } else if (isButtonClicked(settingsButtonX, settingsButtonY, buttonWidth, buttonHeight)) {
+    // Open settings
+  }
   draw();
 }
 
