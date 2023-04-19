@@ -10,11 +10,10 @@ Key keyFour;
 int cols = 11;
 int rows = 11;
 
-// keep tracking game state
-GameState gameState;
-
 int endX;
 int endY;
+boolean isGameLost = false;
+boolean isGameWon = false;
 
 
 void setup() {
@@ -24,8 +23,6 @@ void setup() {
   switch (level) {
     case 1:
     {
-      rows = 11;
-      cols = 11;
       break;
     }
     case 2:
@@ -85,8 +82,6 @@ void setup() {
  }
 
  
- gameState = new GameState();
- 
  theKey = new Key(0, 1);
  grid[0][1].setKey(theKey);
  keyTwo = new Key();
@@ -137,9 +132,7 @@ void draw() {
     for (Ghost ghost : ghosts) {
       ghost.moveGhost();
       if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
-        gameState.setGameLost();
-        gameState.displayGameLost();
-        noLoop();
+        isGameLost = true;
       // Display game lose
       }
     }
@@ -156,18 +149,10 @@ void keyPressed(){
   animal.moveAnimal();
   for (Ghost ghost : ghosts) {
     if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
-      gameState.setGameLost();
-      gameState.displayGameLost();
-      noLoop();
+      isGameLost = true;
       // Display game lose
     }
   }
-  if (animal.getRowNum() == endY && animal.getColNum() == endX) {
-    gameState.setGameWon();
-    gameState.displayGameWon();
-    noLoop();
-  }
-  
 }
 
 class character{
@@ -417,13 +402,8 @@ class Key{
     fill(1, 1, 1);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
+    int y = rowNum*(height/rows)+(height/rows)/2;
     ellipse(x, y, 5, 5);
-    // Testing: print the End Cell
-    int realEndX = endX*(width/cols)+ (width/cols)/2;
-    int realEndY = 40 + endY*(height/rows)+(height/rows)/2;
-    ellipse(realEndX, realEndY, 15, 15);
-    println("End Cell: " + endX + ", " + endY);
   }
   
   void getKey(){
@@ -434,44 +414,4 @@ class Key{
     if (obtained == true) return true;
     else return false;
   }
-}
-
-
-class GameState {
-  boolean isGameLost;
-  boolean isGameWon;
-  
-  GameState(){
-    isGameLost = false;
-    isGameWon = false;
-  }
-  
-  boolean getGameWon() {
-    return isGameWon;
-  }
-  
-  void setGameWon() {
-    isGameWon = true;
-  }
-  
-  boolean getGameLost() {
-    return isGameLost;
-  }
-  
-  void setGameLost() {
-    isGameLost = true;
-  }
-  
-  void displayGameWon() {
-    background(51);
-    textSize(50);
-    text("You won!", 300, 400);
-  }
-  
-  void displayGameLost() {
-    background(51);
-    textSize(50);
-    text("You lost!", 300, 400);
-  }
-  
 }
