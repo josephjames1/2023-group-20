@@ -1,8 +1,10 @@
 cell[][] grid;
 character animal;
-Ghost ghost;
+ArrayList<Ghost> ghosts;
 int cols = 11;
 int rows = 11;
+boolean isGameLost = false;
+boolean isGameWon = false;
 
 void setup() {
   // Swtich game level based on user int level from mainMenu
@@ -86,8 +88,14 @@ void setup() {
         }
     }
   }
+ // Ghost initialization
+ int ghostNumber = 2*level-1;     // Ghosts number based on level diffculty
+ ghosts = new ArrayList();
  
- ghost = new Ghost();
+  // Ghost assignment
+ for (int i = 0; i < ghostNumber; i++) {
+   ghosts.add(new Ghost());
+ }
 }
 
 void draw() {
@@ -118,14 +126,33 @@ void draw() {
   }
   
   animal.displayAnimal();
-  ghost.displayGhost();
-  if (frameCount % 30 == 0) {
-    ghost.moveGhost();
+  
+  // Display ghosts
+  for (Ghost ghost: ghosts) {
+    ghost.displayGhost();
+  }
+  
+  // Ghosts moving speed based on difficulty level
+  int ghostSpeed = 30/level;
+  if (frameCount % ghostSpeed == 0) {
+    for (Ghost ghost : ghosts) {
+      ghost.moveGhost();
+      if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
+        isGameLost = true;
+      // Display game lose
+      }
+    }
   }
 }
 
 void keyPressed(){
   animal.moveAnimal();
+  for (Ghost ghost : ghosts) {
+    if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
+      isGameLost = true;
+      // Display game lose
+    }
+  }
 }
 
 class character{
@@ -247,6 +274,7 @@ class cell {
   
 }
 
+// Ghost class
 class Ghost {
   int rowNum;
   int colNum;
@@ -289,7 +317,7 @@ class Ghost {
     int moveCol = colNum;
     if (direction == 0) moveRow = int (random(-2, 2)) + rowNum;
     if (direction == 1) moveCol = int (random(-2, 2)) + colNum;
-    if (moveRow < 0 || moveRow > rows || moveCol < 0 || moveCol > cols) return;
+    if (moveRow < 0 || moveRow >= rows || moveCol < 0 || moveCol >= cols) return;
     if (!grid[moveCol][moveRow].isWall()) {
       rowNum = moveRow;
       colNum = moveCol;
@@ -299,6 +327,13 @@ class Ghost {
   boolean isMoved(){
     int number = int (random(2));
     boolean res = number == 1 ? true : false;
-    return res;
+    return true;
+ }
+ 
+ boolean isCaught(int row, int col) {
+   if (rowNum == row && colNum == col) {
+     return true;
+   }
+   return false;
  }
 }
