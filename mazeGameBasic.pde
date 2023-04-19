@@ -161,7 +161,7 @@ void keyPressed(){
       // Display game lose
     }
   }
-  if (animal.getRowNum() == endX && animal.getColNum() == endY) {
+  if (animal.getRowNum() == endY && animal.getColNum() == endX) {
     gameState.setGameWon();
     gameState.displayGameWon();
     noLoop();
