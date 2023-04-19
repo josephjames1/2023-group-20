@@ -66,3 +66,6 @@
 
 ---
 
+# *Week 7 - Think Aloud*
+<img width="775" alt="Screenshot 2023-03-13 at 13 59 52" src="https://user-images.githubusercontent.com/116745175/224724019-e3510086-1361-4294-a2f7-908f1355c0bf.png">
+

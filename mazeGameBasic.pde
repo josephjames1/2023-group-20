@@ -1,6 +1,10 @@
 cell[][] grid;
 character animal;
 Ghost ghost;
+Key theKey;
+Key keyTwo;
+Key keyThree;
+Key keyFour;
 int cols = 11;
 int rows = 11;
 
@@ -88,6 +92,14 @@ void setup() {
   }
  
  ghost = new Ghost();
+ theKey = new Key(0, 1);
+ grid[0][1].setKey(theKey);
+ keyTwo = new Key();
+ grid[keyTwo.colNum][keyTwo.rowNum].setKey(keyTwo);
+ keyThree = new Key();
+ grid[keyThree.colNum][keyThree.rowNum].setKey(keyThree);
+ keyFour = new Key();
+ grid[keyFour.colNum][keyFour.rowNum].setKey(keyFour);
 }
 
 void draw() {
@@ -119,6 +131,10 @@ void draw() {
   
   animal.displayAnimal();
   ghost.displayGhost();
+  theKey.displayKey();
+  keyTwo.displayKey();
+  keyThree.displayKey();
+  keyFour.displayKey();
   if (frameCount % 30 == 0) {
     ghost.moveGhost();
   }
@@ -133,10 +149,12 @@ void keyPressed(){
 class character{
   int rowNum;
   int colNum;
+  int numberOfKeys;
   
   character(int row, int col){
     rowNum = row;
     colNum = col;
+    numberOfKeys = 0;
   }
   
   void displayAnimal(){
@@ -171,7 +189,7 @@ class character{
         return;
       }
       //check if cell is wall
-      if (grid[colNum][rowNum-1].isWall()){
+      if (grid[colNum][rowNum-1].isWall() && numberOfKeys <= 0){
           return;
       }
       //move upwards  
@@ -183,7 +201,7 @@ class character{
       if (rowNum == rows-1){
         return;
       }
-      if (grid[colNum][rowNum+1].isWall()){
+      if (grid[colNum][rowNum+1].isWall() && numberOfKeys <= 0){
           return;
         }
       rowNum = rowNum+1;
@@ -193,7 +211,7 @@ class character{
       if (colNum == cols-1){
         return;
       }
-      if (grid[colNum+1][rowNum].isWall()){
+      if (grid[colNum+1][rowNum].isWall() && numberOfKeys <= 0){
           return;
         }
       colNum = colNum+1;
@@ -202,11 +220,30 @@ class character{
       if (colNum == 0){
         return;
       }
-      if (grid[colNum-1][rowNum].isWall()){
+      if (grid[colNum-1][rowNum].isWall() && numberOfKeys <= 0){
           return;
-        }
+       }
       colNum = colNum-1;
     }
+    if (grid[colNum][rowNum].isWall()){
+      grid[colNum][rowNum].destroyWall();
+      numberOfKeys = numberOfKeys - 1;
+    }
+    if (grid[colNum][rowNum].hasKey()){
+      getKey();
+      grid[colNum][rowNum].aKey.getKey();
+      theKey.getKey();
+      grid[colNum][rowNum].removeKey();
+    }
+  }
+  
+  boolean hasKey(){
+    if (numberOfKeys > 0) return true;
+    else return false;
+  }
+  
+  void getKey(){
+    numberOfKeys = numberOfKeys +1;
   }
 }
 
@@ -216,6 +253,8 @@ class cell {
   int x, y;
   int w, h;
   int row, col;
+  boolean hasKey = false;
+  Key aKey; 
  
   cell (int x, int y, int w, int h, int row, int col) {
     this.x = x;
@@ -245,6 +284,24 @@ class cell {
   
   void setWall(){
     wall = true;
+  }
+  
+  void destroyWall(){
+    wall = false;
+  }
+  
+  boolean hasKey(){
+    if (hasKey == true) return true;
+    else return false;
+  }
+  
+  void setKey(Key someKey){
+    hasKey = true;
+    aKey = someKey;
+  }
+  
+  void removeKey(){
+    hasKey = false;
   }
   
 }
@@ -305,27 +362,39 @@ class Ghost {
  }
 }
 
-//// test area for menuBar:
-//    void drawMenuBar() {
-//    int menuBarHeight = 40;
-
-//    // Draw the menu bar background
-//    fill(100, 100, 100, 200);
-//    rect(0, 0, width, menuBarHeight);
-
-//    // Add buttons and labels to the menu bar
-//    fill(255);
-//    textSize(20);
-//    text("Pause", 20, 28);
-//    text("Restart", 100, 28);
-//    text("Settings", 200, 28);
-//  }
-//void mousePressed() {
-//  if (isButtonClicked(pauseButtonX, pauseButtonY, buttonWidth, buttonHeight)) {
-//    // Pause the game
-//  } else if (isButtonClicked(restartButtonX, restartButtonY, buttonWidth, buttonHeight)) {
-//    // Restart the game
-//  } else if (isButtonClicked(settingsButtonX, settingsButtonY, buttonWidth, buttonHeight)) {
-//    // Open settings
-//  }
-//}
+class Key{
+  int rowNum;
+  int colNum;
+  boolean obtained;
+  
+  Key(int col, int row){
+    rowNum = row;
+    colNum = col;
+    obtained = false;
+  }
+  
+  Key(){
+    do {
+      rowNum = int (random(rows));
+      colNum = int (random(cols));
+    } while (grid[colNum][rowNum].isWall() || grid[colNum][rowNum].hasKey());
+  }
+  
+  void displayKey(){
+    if (isObtained()) return;
+    fill(1, 1, 1);
+    //this puts the ellipse in the center of its current cell
+    int x = colNum*(width/cols)+ (width/cols)/2;
+    int y = rowNum*(height/rows)+(height/rows)/2;
+    ellipse(x, y, 5, 5);
+  }
+  
+  void getKey(){
+    obtained = true;
+  }
+  
+  boolean isObtained(){
+    if (obtained == true) return true;
+    else return false;
+  }
+}

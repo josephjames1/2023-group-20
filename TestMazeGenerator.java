@@ -3,7 +3,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class BetaMazeGenerator {
+public class TestMazeGenerator {
 
     private final int width;
     private final int height;
@@ -11,7 +11,7 @@ public class BetaMazeGenerator {
     private int endY;
     private final boolean[][] maze;
 
-    public BetaMazeGenerator(int width, int height) {
+    public TestMazeGenerator(int width, int height) {
         this.width = width;
         this.height = height;
         this.maze = new boolean[height][width];
@@ -83,22 +83,14 @@ public class BetaMazeGenerator {
         return mazeString;
     }
 
-    //public static void main(String[] args) {
-    //    int width = 21;
-    //    int height = 21;
-    //    TestMazeGenerator mazeGenerator = new TestMazeGenerator(width, height);
-    //    mazeGenerator.generateMaze(0, 1);
-    //    String[] maze = mazeGenerator.getMaze();
-    //    for (String row : maze) {
-    //        System.out.println(row);
-    //    }
-    //}
-}
-
-public int[] getMazeExit() {
-        int[] end = new int[2];
-        end[0] = endX;
-        end[1] = endY;
-        return end;
+    public static void main(String[] args) {
+        int width = 21;
+        int height = 21;
+        TestMazeGenerator mazeGenerator = new TestMazeGenerator(width, height);
+        mazeGenerator.generateMaze(0, 1);
+        String[] maze = mazeGenerator.getMaze();
+        for (String row : maze) {
+            System.out.println(row);
         }
-
+    }
+}
