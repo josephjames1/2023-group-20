@@ -1,6 +1,7 @@
 cell[][] grid;
 character animal;
 Ghost ghost;
+Key theKey;
 int cols = 11;
 int rows = 11;
 
@@ -88,6 +89,8 @@ void setup() {
   }
  
  ghost = new Ghost();
+ theKey = new Key(0, 1);
+ grid[0][1].setKey();
 }
 
 void draw() {
@@ -119,6 +122,7 @@ void draw() {
   
   animal.displayAnimal();
   ghost.displayGhost();
+  theKey.displayKey();
   if (frameCount % 30 == 0) {
     ghost.moveGhost();
   }
@@ -131,10 +135,12 @@ void keyPressed(){
 class character{
   int rowNum;
   int colNum;
+  int numberOfKeys;
   
   character(int row, int col){
     rowNum = row;
     colNum = col;
+    numberOfKeys = 0;
   }
   
   void displayAnimal(){
@@ -169,7 +175,7 @@ class character{
         return;
       }
       //check if cell is wall
-      if (grid[colNum][rowNum-1].isWall()){
+      if (grid[colNum][rowNum-1].isWall() && numberOfKeys <= 0){
           return;
       }
       //move upwards  
@@ -181,7 +187,7 @@ class character{
       if (rowNum == rows-1){
         return;
       }
-      if (grid[colNum][rowNum+1].isWall()){
+      if (grid[colNum][rowNum+1].isWall() && numberOfKeys <= 0){
           return;
         }
       rowNum = rowNum+1;
@@ -191,7 +197,7 @@ class character{
       if (colNum == cols-1){
         return;
       }
-      if (grid[colNum+1][rowNum].isWall()){
+      if (grid[colNum+1][rowNum].isWall() && numberOfKeys <= 0){
           return;
         }
       colNum = colNum+1;
@@ -200,11 +206,29 @@ class character{
       if (colNum == 0){
         return;
       }
-      if (grid[colNum-1][rowNum].isWall()){
+      if (grid[colNum-1][rowNum].isWall() && numberOfKeys <= 0){
           return;
-        }
+       }
       colNum = colNum-1;
     }
+    if (grid[colNum][rowNum].isWall()){
+      grid[colNum][rowNum].destroyWall();
+      numberOfKeys = numberOfKeys - 1;
+    }
+    if (grid[colNum][rowNum].hasKey()){
+      getKey();
+      theKey.getKey();
+      grid[colNum][rowNum].removeKey();
+    }
+  }
+  
+  boolean hasKey(){
+    if (numberOfKeys > 0) return true;
+    else return false;
+  }
+  
+  void getKey(){
+    numberOfKeys = numberOfKeys +1;
   }
 }
 
@@ -214,6 +238,7 @@ class cell {
   int x, y;
   int w, h;
   int row, col;
+  boolean hasKey = false;
  
   cell (int x, int y, int w, int h, int row, int col) {
     this.x = x;
@@ -243,6 +268,23 @@ class cell {
   
   void setWall(){
     wall = true;
+  }
+  
+  void destroyWall(){
+    wall = false;
+  }
+  
+  boolean hasKey(){
+    if (hasKey == true) return true;
+    else return false;
+  }
+  
+  void setKey(){
+    hasKey = true;
+  }
+  
+  void removeKey(){
+    hasKey = false;
   }
   
 }
@@ -301,4 +343,34 @@ class Ghost {
     boolean res = number == 1 ? true : false;
     return res;
  }
+}
+
+class Key{
+  int rowNum;
+  int colNum;
+  boolean obtained;
+  
+  Key(int col, int row){
+    rowNum = row;
+    colNum = col;
+    obtained = false;
+  }
+  
+  void displayKey(){
+    if (isObtained()) return;
+    fill(1, 1, 1);
+    //this puts the ellipse in the center of its current cell
+    int x = colNum*(width/cols)+ (width/cols)/2;
+    int y = rowNum*(height/rows)+(height/rows)/2;
+    ellipse(x, y, 5, 5);
+  }
+  
+  void getKey(){
+    obtained = true;
+  }
+  
+  boolean isObtained(){
+    if (obtained == true) return true;
+    else return false;
+  }
 }
