@@ -138,6 +138,7 @@ void draw() {
       if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
         gameState.setGameLost();
         gameState.displayGameLost();
+        noLoop();
       // Display game lose
       }
     }
@@ -156,8 +157,14 @@ void keyPressed(){
     if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
       gameState.setGameLost();
       gameState.displayGameLost();
+      noLoop();
       // Display game lose
     }
+  }
+  if (animal.getRowNum() == endX && animal.getColNum() == endY) {
+    gameState.setGameWon();
+    gameState.displayGameWon();
+    noLoop();
   }
   
 }
@@ -450,11 +457,15 @@ class GameState {
   }
   
   void displayGameWon() {
-    
+    background(51);
+    textSize(50);
+    text("You won!", 300, 400);
   }
   
   void displayGameLost() {
-    
+    background(51);
+    textSize(50);
+    text("You lost!", 300, 400);
   }
   
 }
