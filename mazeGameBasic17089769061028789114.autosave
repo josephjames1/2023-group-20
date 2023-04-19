@@ -23,8 +23,6 @@ void setup() {
   switch (level) {
     case 1:
     {
-      rows = 11;
-      cols = 11;
       break;
     }
     case 2:
@@ -404,13 +402,8 @@ class Key{
     fill(1, 1, 1);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
+    int y = rowNum*(height/rows)+(height/rows)/2;
     ellipse(x, y, 5, 5);
-    // Testing: print the End Cell
-    int realEndX = endX*(width/cols)+ (width/cols)/2;
-    int realEndY = 40 + endY*(height/rows)+(height/rows)/2;
-    ellipse(realEndX, realEndY, 15, 15);
-    println("End Cell: " + endX + ", " + endY);
   }
   
   void getKey(){
