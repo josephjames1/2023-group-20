@@ -9,8 +9,8 @@ Key keyFour;
 
 int cols = 11;
 int rows = 11;
-boolean isGameLost = false;
-boolean isGameWon = false;
+// keep tracking game state
+GameState gameState;
 
 void setup() {
   // Swtich game level based on user int level from mainMenu
@@ -104,6 +104,8 @@ void setup() {
    ghosts.add(new Ghost());
  }
  
+ gameState = new GameState();
+ 
  theKey = new Key(0, 1);
  grid[0][1].setKey(theKey);
  keyTwo = new Key();
@@ -154,7 +156,8 @@ void draw() {
     for (Ghost ghost : ghosts) {
       ghost.moveGhost();
       if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
-        isGameLost = true;
+        gameState.setGameLost();
+        gameState.displayGameLost();
       // Display game lose
       }
     }
@@ -171,10 +174,12 @@ void keyPressed(){
   animal.moveAnimal();
   for (Ghost ghost : ghosts) {
     if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
-      isGameLost = true;
+      gameState.setGameLost();
+      gameState.displayGameLost();
       // Display game lose
     }
   }
+  
 }
 
 class character{
@@ -436,4 +441,40 @@ class Key{
     if (obtained == true) return true;
     else return false;
   }
+}
+
+
+class GameState {
+  boolean isGameLost;
+  boolean isGameWon;
+  
+  GameState(){
+    isGameLost = false;
+    isGameWon = false;
+  }
+  
+  boolean getGameWon() {
+    return isGameWon;
+  }
+  
+  void setGameWon() {
+    isGameWon = true;
+  }
+  
+  boolean getGameLost() {
+    return isGameLost;
+  }
+  
+  void setGameLost() {
+    isGameLost = true;
+  }
+  
+  void displayGameWon() {
+    
+  }
+  
+  void displayGameLost() {
+    
+  }
+  
 }

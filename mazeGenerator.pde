@@ -101,4 +101,3 @@ public int[] getMazeExit() {
         end[1] = endY;
         return end;
         }
-
