@@ -9,8 +9,13 @@ Key keyFour;
 
 int cols = 11;
 int rows = 11;
+
 // keep tracking game state
 GameState gameState;
+
+int endX;
+int endY;
+
 
 void setup() {
   // Swtich game level based on user int level from mainMenu
@@ -49,39 +54,7 @@ void setup() {
     }
   }
  
- //String[] mazeText = {
- //           " ###################",
- //           "            #      #",
- //           "###### ###### #### #",
- //           "## ### ###### #    #",
- //           "## #   #   ## # # ##",
- //           "## # ### # ## # #  #",
- //           "## #     #    # ####",
- //           "## ###### # ### ## #",
- //           "#        ## ### ## #",
- //           "###### ###### # # ##",
- //           "#      #      # #  #",
- //           "# ##### ####### # ##",
- //           "# ###    #      #  #",
- //           "# # ###### ###### ##",
- //           "# #  ##  #         #",
- //           "# ## ## ###### #####",
- //           "# #  # ##          #",
- //           "# # ## ## ###### ###",
- //           "#     ###          #",
- //           "##################  "
- //       };
- //  for (int i = 0; i < rows; i++) {
- //           for (int j = 0; j < cols; j++) {
- //               if (mazeText[i].charAt(j) == '#')
- //               {
- //                 grid[j][i].setWall();
- //               }
- //           }
- //       }
- // String[] mazeText = MazeGenerator.generateMaze(rows, cols);
-  //BetaMazeGenerator mazeGenerator = new BetaMazeGenerator(rows, cols);
-  // Generate a maze based on the int level from mainMenu
+  // Generate maze
   BetaMazeGenerator mazeGenerator = new BetaMazeGenerator(rows, cols);
   mazeGenerator.generateMaze(0, 1);
   mazeGenerator.printMaze();
@@ -94,6 +67,12 @@ void setup() {
         }
     }
   }
+
+  // Set the endX and endY
+  int end[] = mazeGenerator.getMazeExit();
+    endX = end[0];
+    endY = end[1];
+
  // Ghost initialization
  int ghostNumber = 2*level-1;     // Ghosts number based on level diffculty
  ghosts = new ArrayList();
@@ -103,6 +82,7 @@ void setup() {
  for (int i = 0; i < ghostNumber; i++) {
    ghosts.add(new Ghost());
  }
+
  
  gameState = new GameState();
  

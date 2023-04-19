@@ -7,13 +7,15 @@ public class BetaMazeGenerator {
 
     private final int width;
     private final int height;
-    private int endX;
-    private int endY;
+    public int endX;
+    public int endY;
     private final boolean[][] maze;
 
     public BetaMazeGenerator(int width, int height) {
         this.width = width;
         this.height = height;
+        this.endX = 0;
+        this.endY = 0;
         this.maze = new boolean[height][width];
     }
 
@@ -82,22 +84,10 @@ public class BetaMazeGenerator {
         }
         return mazeString;
     }
-
-    //public static void main(String[] args) {
-    //    int width = 21;
-    //    int height = 21;
-    //    TestMazeGenerator mazeGenerator = new TestMazeGenerator(width, height);
-    //    mazeGenerator.generateMaze(0, 1);
-    //    String[] maze = mazeGenerator.getMaze();
-    //    for (String row : maze) {
-    //        System.out.println(row);
-    //    }
-    //}
-}
-
-public int[] getMazeExit() {
+    public int[] getMazeExit() {
         int[] end = new int[2];
         end[0] = endX;
         end[1] = endY;
         return end;
         }
+}
