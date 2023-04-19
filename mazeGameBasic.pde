@@ -1,14 +1,26 @@
 cell[][] grid;
 character animal;
-Ghost ghost;
+
+ArrayList<Ghost> ghosts;
 Key theKey;
+Key keyTwo;
+Key keyThree;
+Key keyFour;
+
 int cols = 11;
 int rows = 11;
 
+// keep tracking game state
+GameState gameState;
+
+int endX;
+int endY;
+
+
 void setup() {
   // Swtich game level based on user int level from mainMenu
-  int level = mainMenu.getLevel();
-  System.out.println(level);
+  int level = getLevel();
+  System.out.println("Level: "+level);
   switch (level) {
     case 1:
     {
@@ -37,44 +49,12 @@ void setup() {
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       ///intialize cell objects 
-      grid[i][j] = new cell(i*(width/cols), j*(height/rows), width/cols, height/rows, i, j);
+      grid[i][j] = new cell(i*(width/cols), 40+j*(height/rows), width/cols, height/rows, i, j);
 
     }
   }
  
- //String[] mazeText = {
- //           " ###################",
- //           "            #      #",
- //           "###### ###### #### #",
- //           "## ### ###### #    #",
- //           "## #   #   ## # # ##",
- //           "## # ### # ## # #  #",
- //           "## #     #    # ####",
- //           "## ###### # ### ## #",
- //           "#        ## ### ## #",
- //           "###### ###### # # ##",
- //           "#      #      # #  #",
- //           "# ##### ####### # ##",
- //           "# ###    #      #  #",
- //           "# # ###### ###### ##",
- //           "# #  ##  #         #",
- //           "# ## ## ###### #####",
- //           "# #  # ##          #",
- //           "# # ## ## ###### ###",
- //           "#     ###          #",
- //           "##################  "
- //       };
- //  for (int i = 0; i < rows; i++) {
- //           for (int j = 0; j < cols; j++) {
- //               if (mazeText[i].charAt(j) == '#')
- //               {
- //                 grid[j][i].setWall();
- //               }
- //           }
- //       }
- // String[] mazeText = MazeGenerator.generateMaze(rows, cols);
-  //BetaMazeGenerator mazeGenerator = new BetaMazeGenerator(rows, cols);
-  // Generate a maze based on the int level from mainMenu
+  // Generate maze
   BetaMazeGenerator mazeGenerator = new BetaMazeGenerator(rows, cols);
   mazeGenerator.generateMaze(0, 1);
   mazeGenerator.printMaze();
@@ -87,10 +67,33 @@ void setup() {
         }
     }
   }
+
+  // Set the endX and endY
+  int end[] = mazeGenerator.getMazeExit();
+    endX = end[0];
+    endY = end[1];
+
+ // Ghost initialization
+ int ghostNumber = 2*level-1;     // Ghosts number based on level diffculty
+ ghosts = new ArrayList();
  
- ghost = new Ghost();
+
+  // Ghost assignment
+ for (int i = 0; i < ghostNumber; i++) {
+   ghosts.add(new Ghost());
+ }
+
+ 
+ gameState = new GameState();
+ 
  theKey = new Key(0, 1);
- grid[0][1].setKey();
+ grid[0][1].setKey(theKey);
+ keyTwo = new Key();
+ grid[keyTwo.colNum][keyTwo.rowNum].setKey(keyTwo);
+ keyThree = new Key();
+ grid[keyThree.colNum][keyThree.rowNum].setKey(keyThree);
+ keyFour = new Key();
+ grid[keyFour.colNum][keyFour.rowNum].setKey(keyFour);
 }
 
 void draw() {
@@ -121,15 +124,49 @@ void draw() {
   }
   
   animal.displayAnimal();
-  ghost.displayGhost();
-  theKey.displayKey();
-  if (frameCount % 30 == 0) {
-    ghost.moveGhost();
+  
+  // Display ghosts
+  for (Ghost ghost: ghosts) {
+    ghost.displayGhost();
   }
+  
+  // Ghosts moving speed based on difficulty level
+  int ghostSpeed = 30/level;
+  if (frameCount % ghostSpeed == 0) {
+    for (Ghost ghost : ghosts) {
+      ghost.moveGhost();
+      if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
+        gameState.setGameLost();
+        gameState.displayGameLost();
+        noLoop();
+      // Display game lose
+      }
+    }
+  }
+  theKey.displayKey();
+  keyTwo.displayKey();
+  keyThree.displayKey();
+  keyFour.displayKey();
+
+  drawMenuBar();
 }
 
 void keyPressed(){
   animal.moveAnimal();
+  for (Ghost ghost : ghosts) {
+    if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
+      gameState.setGameLost();
+      gameState.displayGameLost();
+      noLoop();
+      // Display game lose
+    }
+  }
+  if (animal.getRowNum() == endX && animal.getColNum() == endY) {
+    gameState.setGameWon();
+    gameState.displayGameWon();
+    noLoop();
+  }
+  
 }
 
 class character{
@@ -147,7 +184,7 @@ class character{
     fill(1, 1, 1);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = rowNum*(height/rows)+(height/rows)/2;
+    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
     ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
@@ -217,6 +254,7 @@ class character{
     }
     if (grid[colNum][rowNum].hasKey()){
       getKey();
+      grid[colNum][rowNum].aKey.getKey();
       theKey.getKey();
       grid[colNum][rowNum].removeKey();
     }
@@ -239,6 +277,7 @@ class cell {
   int w, h;
   int row, col;
   boolean hasKey = false;
+  Key aKey; 
  
   cell (int x, int y, int w, int h, int row, int col) {
     this.x = x;
@@ -279,8 +318,9 @@ class cell {
     else return false;
   }
   
-  void setKey(){
+  void setKey(Key someKey){
     hasKey = true;
+    aKey = someKey;
   }
   
   void removeKey(){
@@ -289,6 +329,7 @@ class cell {
   
 }
 
+// Ghost class
 class Ghost {
   int rowNum;
   int colNum;
@@ -304,7 +345,7 @@ class Ghost {
     fill(255, 192, 203);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = rowNum*(height/rows)+(height/rows)/2;
+    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
     ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
@@ -331,7 +372,7 @@ class Ghost {
     int moveCol = colNum;
     if (direction == 0) moveRow = int (random(-2, 2)) + rowNum;
     if (direction == 1) moveCol = int (random(-2, 2)) + colNum;
-    if (moveRow < 0 || moveRow > rows || moveCol < 0 || moveCol > cols) return;
+    if (moveRow < 0 || moveRow >= rows || moveCol < 0 || moveCol >= cols) return;
     if (!grid[moveCol][moveRow].isWall()) {
       rowNum = moveRow;
       colNum = moveCol;
@@ -341,7 +382,14 @@ class Ghost {
   boolean isMoved(){
     int number = int (random(2));
     boolean res = number == 1 ? true : false;
-    return res;
+    return true;
+ }
+ 
+ boolean isCaught(int row, int col) {
+   if (rowNum == row && colNum == col) {
+     return true;
+   }
+   return false;
  }
 }
 
@@ -354,6 +402,13 @@ class Key{
     rowNum = row;
     colNum = col;
     obtained = false;
+  }
+  
+  Key(){
+    do {
+      rowNum = int (random(rows));
+      colNum = int (random(cols));
+    } while (grid[colNum][rowNum].isWall() || grid[colNum][rowNum].hasKey());
   }
   
   void displayKey(){
@@ -373,4 +428,44 @@ class Key{
     if (obtained == true) return true;
     else return false;
   }
+}
+
+
+class GameState {
+  boolean isGameLost;
+  boolean isGameWon;
+  
+  GameState(){
+    isGameLost = false;
+    isGameWon = false;
+  }
+  
+  boolean getGameWon() {
+    return isGameWon;
+  }
+  
+  void setGameWon() {
+    isGameWon = true;
+  }
+  
+  boolean getGameLost() {
+    return isGameLost;
+  }
+  
+  void setGameLost() {
+    isGameLost = true;
+  }
+  
+  void displayGameWon() {
+    background(51);
+    textSize(50);
+    text("You won!", 300, 400);
+  }
+  
+  void displayGameLost() {
+    background(51);
+    textSize(50);
+    text("You lost!", 300, 400);
+  }
+  
 }
