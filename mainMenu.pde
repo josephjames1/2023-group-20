@@ -7,7 +7,7 @@ int role=0;
 //1 represents easy!
 //2 represents medium!
 //3 represents hard!
-int level=0;
+static int level=0;
 //0 represents initialize window
 //1 represents main menu
 //2 represents choose animal
@@ -54,7 +54,7 @@ void initializeWindow()
   text("Click anywhere to start!", 20, 450);
 }
 
-void mainMenu()
+void mainGameMenu()
 {
   
   textSize(30);
@@ -223,15 +223,29 @@ void mousePressed() {
   if(step==3){
     if((mouseX>=100 && mouseX<=300)&&(mouseY>=50 && mouseY<=130)){
       level=1;
+      setup();
     }else if((mouseX>=100 && mouseX<=300)&&(mouseY>=170 && mouseY<=250)){
       level=2;
+      setup();
     }else if((mouseX>=100 && mouseX<=300)&&(mouseY>=290 && mouseY<=370)){
       level=3;
+      setup();
     }
     if((mouseX>=50 && mouseX<=150)&&(mouseY>=400 && mouseY<=450)){
       step=1;
       return;
     }
   }
+    if (isButtonClicked(pauseButtonX, pauseButtonY, buttonWidth, buttonHeight)) {
+    // Pause the game
+  } else if (isButtonClicked(restartButtonX, restartButtonY, buttonWidth, buttonHeight)) {
+    // Restart the game
+  } else if (isButtonClicked(settingsButtonX, settingsButtonY, buttonWidth, buttonHeight)) {
+    // Open settings
+  }
   draw();
+}
+
+public static int getLevel(){
+  return level;
 }

@@ -1,53 +1,91 @@
 cell[][] grid;
 character animal;
 Ghost ghost;
-int cols = 20;
-int rows = 20;
+int cols = 11;
+int rows = 11;
 
 void setup() {
-  size(600, 600);
-  int rowStart = 0;
-  int colStart = 0;
+  // Swtich game level based on user int level from mainMenu
+  int level = getLevel();
+  System.out.println("Level: "+level);
+  switch (level) {
+    case 1:
+    {
+      break;
+    }
+    case 2:
+    {
+      rows += 10;
+      cols += 10;
+      
+      break;
+    }
+    case 3:
+    {
+      rows += 20;
+      cols += 20;
+      break;
+    }
+    default: break;
+  }
+  size(800, 800);
+  int rowStart = 1;
+  int colStart = 1;
   grid = new cell[cols][rows];
   animal = new character(rowStart, colStart);
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       ///intialize cell objects 
-      grid[i][j] = new cell(i*(width/cols), j*(height/rows), width/cols, height/rows, i, j);
+      grid[i][j] = new cell(i*(width/cols), 40+j*(height/rows), width/cols, height/rows, i, j);
 
     }
   }
  
- String[] mazeText = {
-            " ###################",
-            "            #      #",
-            "###### ###### #### #",
-            "## ### ###### #    #",
-            "## #   #   ## # # ##",
-            "## # ### # ## # #  #",
-            "## #     #    # ####",
-            "## ###### # ### ## #",
-            "#        ## ### ## #",
-            "###### ###### # # ##",
-            "#      #      # #  #",
-            "# ##### ####### # ##",
-            "# ###    #      #  #",
-            "# # ###### ###### ##",
-            "# #  ##  #         #",
-            "# ## ## ###### #####",
-            "# #  # ##          #",
-            "# # ## ## ###### ###",
-            "#     ###          #",
-            "##################  "
-        };
-   for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (mazeText[i].charAt(j) == '#')
-                {
-                  grid[j][i].setWall();
-                }
-            }
+ //String[] mazeText = {
+ //           " ###################",
+ //           "            #      #",
+ //           "###### ###### #### #",
+ //           "## ### ###### #    #",
+ //           "## #   #   ## # # ##",
+ //           "## # ### # ## # #  #",
+ //           "## #     #    # ####",
+ //           "## ###### # ### ## #",
+ //           "#        ## ### ## #",
+ //           "###### ###### # # ##",
+ //           "#      #      # #  #",
+ //           "# ##### ####### # ##",
+ //           "# ###    #      #  #",
+ //           "# # ###### ###### ##",
+ //           "# #  ##  #         #",
+ //           "# ## ## ###### #####",
+ //           "# #  # ##          #",
+ //           "# # ## ## ###### ###",
+ //           "#     ###          #",
+ //           "##################  "
+ //       };
+ //  for (int i = 0; i < rows; i++) {
+ //           for (int j = 0; j < cols; j++) {
+ //               if (mazeText[i].charAt(j) == '#')
+ //               {
+ //                 grid[j][i].setWall();
+ //               }
+ //           }
+ //       }
+ // String[] mazeText = MazeGenerator.generateMaze(rows, cols);
+  //BetaMazeGenerator mazeGenerator = new BetaMazeGenerator(rows, cols);
+  // Generate a maze based on the int level from mainMenu
+  BetaMazeGenerator mazeGenerator = new BetaMazeGenerator(rows, cols);
+  mazeGenerator.generateMaze(0, 1);
+  mazeGenerator.printMaze();
+  String[] mazeText = mazeGenerator.getMaze();
+
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+        if (mazeText[i].charAt(j) == '#') {
+            grid[j][i].setWall();
         }
+    }
+  }
  
  ghost = new Ghost();
 }
@@ -59,7 +97,7 @@ void draw() {
     if(step==0){
       initializeWindow();
     }else if(step==1){
-      mainMenu();
+      mainGameMenu();
     }else if(step==2){
      chooseAnimal();
     }else if(step==3){
@@ -84,6 +122,8 @@ void draw() {
   if (frameCount % 30 == 0) {
     ghost.moveGhost();
   }
+
+  drawMenuBar();
 }
 
 void keyPressed(){
@@ -103,8 +143,8 @@ class character{
     fill(1, 1, 1);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = rowNum*(height/rows)+(height/rows)/2;
-    ellipse(x, y, 20, 20);
+    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
+    ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
   void setRowNum(int row){
@@ -224,8 +264,8 @@ class Ghost {
     fill(255, 192, 203);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = rowNum*(height/rows)+(height/rows)/2;
-    ellipse(x, y, 20, 20);
+    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
+    ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
   void setRowNum(int row){
@@ -251,7 +291,7 @@ class Ghost {
     int moveCol = colNum;
     if (direction == 0) moveRow = int (random(-2, 2)) + rowNum;
     if (direction == 1) moveCol = int (random(-2, 2)) + colNum;
-    if (moveRow < 0 || moveRow > rows || moveCol < 0 || moveCol > cols) return;
+    if (moveRow < 0 || moveRow >= rows || moveCol < 0 || moveCol >= cols) return;
     if (!grid[moveCol][moveRow].isWall()) {
       rowNum = moveRow;
       colNum = moveCol;
@@ -264,3 +304,28 @@ class Ghost {
     return res;
  }
 }
+
+//// test area for menuBar:
+//    void drawMenuBar() {
+//    int menuBarHeight = 40;
+
+//    // Draw the menu bar background
+//    fill(100, 100, 100, 200);
+//    rect(0, 0, width, menuBarHeight);
+
+//    // Add buttons and labels to the menu bar
+//    fill(255);
+//    textSize(20);
+//    text("Pause", 20, 28);
+//    text("Restart", 100, 28);
+//    text("Settings", 200, 28);
+//  }
+//void mousePressed() {
+//  if (isButtonClicked(pauseButtonX, pauseButtonY, buttonWidth, buttonHeight)) {
+//    // Pause the game
+//  } else if (isButtonClicked(restartButtonX, restartButtonY, buttonWidth, buttonHeight)) {
+//    // Restart the game
+//  } else if (isButtonClicked(settingsButtonX, settingsButtonY, buttonWidth, buttonHeight)) {
+//    // Open settings
+//  }
+//}
