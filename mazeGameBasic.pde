@@ -1,14 +1,20 @@
 cell[][] grid;
 character animal;
-Ghost ghost;
+
+ArrayList<Ghost> ghosts;
 Key theKey;
 Key keyTwo;
 Key keyThree;
 Key keyFour;
+
 int cols = 11;
 int rows = 11;
+
 int endX;
 int endY;
+boolean isGameLost = false;
+boolean isGameWon = false;
+
 
 void setup() {
   // Swtich game level based on user int level from mainMenu
@@ -60,12 +66,23 @@ void setup() {
         }
     }
   }
+
   // Set the endX and endY
   int end[] = mazeGenerator.getMazeExit();
     endX = end[0];
     endY = end[1];
+
+ // Ghost initialization
+ int ghostNumber = 2*level-1;     // Ghosts number based on level diffculty
+ ghosts = new ArrayList();
  
- ghost = new Ghost();
+
+  // Ghost assignment
+ for (int i = 0; i < ghostNumber; i++) {
+   ghosts.add(new Ghost());
+ }
+
+ 
  theKey = new Key(0, 1);
  grid[0][1].setKey(theKey);
  keyTwo = new Key();
@@ -104,20 +121,39 @@ void draw() {
   }
   
   animal.displayAnimal();
-  ghost.displayGhost();
+  
+  // Display ghosts
+  for (Ghost ghost: ghosts) {
+    ghost.displayGhost();
+  }
+  
+  // Ghosts moving speed based on difficulty level
+  int ghostSpeed = 30/level;
+  if (frameCount % ghostSpeed == 0) {
+    for (Ghost ghost : ghosts) {
+      ghost.moveGhost();
+      if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
+        isGameLost = true;
+      // Display game lose
+      }
+    }
+  }
   theKey.displayKey();
   keyTwo.displayKey();
   keyThree.displayKey();
   keyFour.displayKey();
-  if (frameCount % 30 == 0) {
-    ghost.moveGhost();
-  }
 
   drawMenuBar();
 }
 
 void keyPressed(){
   animal.moveAnimal();
+  for (Ghost ghost : ghosts) {
+    if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
+      isGameLost = true;
+      // Display game lose
+    }
+  }
 }
 
 class character{
@@ -280,6 +316,7 @@ class cell {
   
 }
 
+// Ghost class
 class Ghost {
   int rowNum;
   int colNum;
@@ -332,7 +369,14 @@ class Ghost {
   boolean isMoved(){
     int number = int (random(2));
     boolean res = number == 1 ? true : false;
-    return res;
+    return true;
+ }
+ 
+ boolean isCaught(int row, int col) {
+   if (rowNum == row && colNum == col) {
+     return true;
+   }
+   return false;
  }
 }
 
