@@ -237,14 +237,12 @@ void mousePressed() {
     }
   }
   if (mainOrGame == 2) {
+    
     if (isButtonClicked(pauseButtonX, pauseButtonY, buttonWidth, buttonHeight)) {
+      // Pause the game
       println("Pause button clicked");
-      isPaused = !isPaused;
     } else if (isButtonClicked(restartButtonX, restartButtonY, buttonWidth, buttonHeight)) {
       // Restart the game
-      println("Restart button clicked");
-      isPaused = false;
-      setup();
     } else if (isButtonClicked(settingsButtonX, settingsButtonY, buttonWidth, buttonHeight)) {
       // Open the settings menu
     }

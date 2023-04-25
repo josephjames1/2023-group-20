@@ -1,4 +1,4 @@
-int buttonWidth = 80;
+ int buttonWidth = 80;
 int buttonHeight = 30;
 int pauseButtonX = 20;
 int pauseButtonY = 5;
@@ -22,10 +22,11 @@ void drawMenuBar() {
 
   // Add labels to the buttons
   textSize(20);
+  textAlign(CENTER, CENTER);
   fill(0);
-  text("Pause", pauseButtonX + 20, pauseButtonY + 23);
-  text("Restart", restartButtonX + 10, restartButtonY + 23);
-  text("Settings", settingsButtonX + 5, settingsButtonY + 23);
+  text("Pause", pauseButtonX + buttonWidth / 2, pauseButtonY + buttonHeight / 2);
+  text("Restart", restartButtonX + buttonWidth / 2, restartButtonY + buttonHeight / 2);
+  text("Settings", settingsButtonX + buttonWidth / 2, settingsButtonY + buttonHeight / 2);
 }
 
 boolean isButtonClicked(int buttonX, int buttonY, int buttonWidth, int buttonHeight) {
