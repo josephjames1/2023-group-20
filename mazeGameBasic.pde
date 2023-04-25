@@ -48,7 +48,7 @@ void setup() {
     default: break;
   }
   
-  size(800, 800);
+  size(800, 840);
   int rowStart = 1;
   int colStart = 1;
   grid = new cell[cols][rows];
@@ -56,7 +56,7 @@ void setup() {
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       ///intialize cell objects 
-      grid[i][j] = new cell(i*(width/cols), 40+j*(height/rows), width/cols, height/rows, i, j);
+      grid[i][j] = new cell(i*(width/cols), 40+j*((height - menuBarHeight)/rows), width/cols, height/rows, i, j);
 
     }
   }
@@ -197,7 +197,7 @@ class character{
     fill(1, 1, 1);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
+    int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
     ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
@@ -358,7 +358,7 @@ class Ghost {
     fill(255, 192, 203);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
+    int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
     ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
@@ -429,12 +429,15 @@ class Key{
     fill(1, 1, 1);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
+    int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
     ellipse(x, y, 5, 5);
     // Testing: print the End Cell
     int realEndX = endX*(width/cols)+ (width/cols)/2;
-    int realEndY = 40 + endY*(height/rows)+(height/rows)/2;
-    ellipse(realEndX, realEndY, 15, 15);
+    int realEndY = 40 + endY*((height-menuBarHeight)/rows)+(height/rows)/2;
+    //draw an '->' at the end cell
+    fill(200, 0, 0);
+    textSize(8);
+    text("EXIT", realEndX, realEndY);
     println("End Cell: " + endX + ", " + endY);
   }
   

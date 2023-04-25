@@ -1,4 +1,4 @@
- int buttonWidth = 80;
+int buttonWidth = 80;
 int buttonHeight = 30;
 int pauseButtonX = 20;
 int pauseButtonY = 5;
@@ -7,9 +7,9 @@ int restartButtonY = 5;
 int settingsButtonX = 220;
 int settingsButtonY = 5;
 
-void drawMenuBar() {
-  int menuBarHeight = 40;
+int menuBarHeight = 40;
 
+void drawMenuBar() {
   // Draw the menu bar background
   fill(100, 100, 100, 200);
   rect(0, 0, width, menuBarHeight);
