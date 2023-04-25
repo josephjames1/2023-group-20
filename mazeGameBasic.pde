@@ -16,6 +16,11 @@ GameState gameState;
 int endX;
 int endY;
 
+boolean isPaused = false;
+boolean showMenu = false;
+int menuRestartButtonX, menuRestartButtonY, menuLevelButtonX, menuLevelButtonY, menuExitButtonX, menuExitButtonY;
+int menuButtonWidth, menuButtonHeight;
+
 
 void setup() {
   // Swtich game level based on user int level from mainMenu
@@ -42,6 +47,7 @@ void setup() {
     }
     default: break;
   }
+  
   size(800, 800);
   int rowStart = 1;
   int colStart = 1;
@@ -98,6 +104,9 @@ void setup() {
 }
 
 void draw() {
+  if (isPaused) {
+    return;
+  }
   if(mainOrGame==0){
     fill(255);
     rect(0,0,400,500);
@@ -150,6 +159,9 @@ void draw() {
   keyFour.displayKey();
 
   drawMenuBar();
+  if (showMenu) {
+    drawMenuButtons();
+  }
 }
 
 void keyPressed(){
@@ -419,11 +431,6 @@ class Key{
     int x = colNum*(width/cols)+ (width/cols)/2;
     int y = 40 + rowNum*(height/rows)+(height/rows)/2;
     ellipse(x, y, 5, 5);
-    // Testing: print the End Cell
-    int realEndX = endX*(width/cols)+ (width/cols)/2;
-    int realEndY = 40 + endY*(height/rows)+(height/rows)/2;
-    ellipse(realEndX, realEndY, 15, 15);
-    println("End Cell: " + endX + ", " + endY);
   }
   
   void getKey(){
@@ -474,4 +481,51 @@ class GameState {
     text("You lost!", 300, 400);
   }
   
+}
+
+void drawMenuButtons() {
+  menuButtonWidth = 200;
+  menuButtonHeight = 50;
+  menuRestartButtonX = (width - menuButtonWidth) / 2;
+  menuRestartButtonY = (height - menuButtonHeight * 3) / 2;
+  menuLevelButtonX = (width - menuButtonWidth) / 2;
+  menuLevelButtonY = menuRestartButtonY + menuButtonHeight + 10;
+  menuExitButtonX = (width - menuButtonWidth) / 2;
+  menuExitButtonY = menuLevelButtonY + menuButtonHeight + 10;
+
+  fill(255);
+  rect(menuRestartButtonX, menuRestartButtonY, menuButtonWidth, menuButtonHeight);
+  rect(menuLevelButtonX, menuLevelButtonY, menuButtonWidth, menuButtonHeight);
+  rect(menuExitButtonX, menuExitButtonY, menuButtonWidth, menuButtonHeight);
+
+  textSize(24);
+  fill(0);
+  textAlign(CENTER, CENTER);
+  text("Restart", menuRestartButtonX + menuButtonWidth / 2, menuRestartButtonY + menuButtonHeight / 2);
+  text("Change Level", menuLevelButtonX + menuButtonWidth / 2, menuLevelButtonY + menuButtonHeight / 2);
+  text("Exit", menuExitButtonX + menuButtonWidth / 2, menuExitButtonY + menuButtonHeight / 2);
+}
+
+void mouseClicked() {
+  if (showMenu) {
+    if (mouseX >= menuRestartButtonX && mouseX <= menuRestartButtonX + menuButtonWidth &&
+        mouseY >= menuRestartButtonY && mouseY <= menuRestartButtonY + menuButtonHeight) {
+      // Restart the game
+      setup();
+      loop();
+    } else if (mouseX >= menuLevelButtonX && mouseX <= menuLevelButtonX + menuButtonWidth &&
+               mouseY >= menuLevelButtonY && mouseY <= menuLevelButtonY + menuButtonHeight) {
+      // Change the level
+      level += 1;
+      if (level > 3) {
+        level = 1;
+      }
+      setup();
+      loop();
+    } else if (mouseX >= menuExitButtonX && mouseX <= menuExitButtonX + menuButtonWidth &&
+               mouseY >= menuExitButtonY && mouseY <= menuExitButtonY + menuButtonHeight) {
+      // Exit the game
+      exit();
+    }
+  }
 }
