@@ -23,6 +23,7 @@ int menuButtonWidth, menuButtonHeight;
 
 
 void setup() {
+  playAudio();
   // Swtich game level based on user int level from mainMenu
   int level = getLevel();
   System.out.println("Level: "+level);
