@@ -64,8 +64,4 @@
 - ## Case diagram
     <img width="744" alt="Screenshot 2023-02-12 at 18 49 07" src="https://user-images.githubusercontent.com/116745175/218330755-625ddec5-4bd4-4b3a-ae86-6186261f99aa.png">
 
----
-
-# *Week 7 - Think Aloud*
-<img width="775" alt="Screenshot 2023-03-13 at 13 59 52" src="https://user-images.githubusercontent.com/116745175/224724019-e3510086-1361-4294-a2f7-908f1355c0bf.png">
 

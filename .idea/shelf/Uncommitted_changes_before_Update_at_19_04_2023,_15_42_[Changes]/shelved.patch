@@ -1,0 +1,30 @@
+Index: TheMazeGenerator/TheMazeGenerator/.idea/.gitignore
+===================================================================
+diff --git a/TheMazeGenerator/TheMazeGenerator/.idea/.gitignore b/TheMazeGenerator/TheMazeGenerator/.idea/.gitignore
+deleted file mode 100644
+--- a/TheMazeGenerator/TheMazeGenerator/.idea/.gitignore	(revision f8190823cfe5f93be9f41d4428229dd13279613b)
++++ /dev/null	(revision f8190823cfe5f93be9f41d4428229dd13279613b)
+@@ -1,8 +0,0 @@
+-# Default ignored files
+-/shelf/
+-/workspace.xml
+-# Editor-based HTTP Client requests
+-/httpRequests/
+-# Datasource local storage ignored files
+-/dataSources/
+-/dataSources.local.xml
+Index: .idea/.gitignore
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+deleted file mode 100644
+--- a/.idea/.gitignore	(revision f8190823cfe5f93be9f41d4428229dd13279613b)
++++ /dev/null	(revision f8190823cfe5f93be9f41d4428229dd13279613b)
+@@ -1,8 +0,0 @@
+-# Default ignored files
+-/shelf/
+-/workspace.xml
+-# Editor-based HTTP Client requests
+-/httpRequests/
+-# Datasource local storage ignored files
+-/dataSources/
+-/dataSources.local.xml
