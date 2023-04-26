@@ -10,28 +10,19 @@ Key keyFour;
 int cols = 11;
 int rows = 11;
 
-// keep tracking game state
-GameState gameState;
-
 int endX;
 int endY;
-
-boolean isPaused = false;
-boolean showMenu = false;
-int menuRestartButtonX, menuRestartButtonY, menuLevelButtonX, menuLevelButtonY, menuExitButtonX, menuExitButtonY;
-int menuButtonWidth, menuButtonHeight;
+boolean isGameLost = false;
+boolean isGameWon = false;
 
 
 void setup() {
-  playAudio();
   // Swtich game level based on user int level from mainMenu
   int level = getLevel();
   System.out.println("Level: "+level);
   switch (level) {
     case 1:
     {
-      rows = 11;
-      cols = 11;
       break;
     }
     case 2:
@@ -48,8 +39,7 @@ void setup() {
     }
     default: break;
   }
-  
-  size(800, 840);
+  size(800, 800);
   int rowStart = 1;
   int colStart = 1;
   grid = new cell[cols][rows];
@@ -57,7 +47,7 @@ void setup() {
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       ///intialize cell objects 
-      grid[i][j] = new cell(i*(width/cols), 40+j*((height - menuBarHeight)/rows), width/cols, height/rows, i, j);
+      grid[i][j] = new cell(i*(width/cols), 40+j*(height/rows), width/cols, height/rows, i, j);
 
     }
   }
@@ -92,8 +82,6 @@ void setup() {
  }
 
  
- gameState = new GameState();
- 
  theKey = new Key(0, 1);
  grid[0][1].setKey(theKey);
  keyTwo = new Key();
@@ -105,18 +93,17 @@ void setup() {
 }
 
 void draw() {
-  if (isPaused) {
-    return;
-  }
   if(mainOrGame==0){
     fill(255);
-    rect(0,0,800,800);
+    rect(0,0,400,500);
     if(step==0){
       initializeWindow();
     }else if(step==1){
-      chooseAnimal();
+      mainGameMenu();
     }else if(step==2){
-     chooseLevel();
+     chooseAnimal();
+    }else if(step==3){
+      chooseLevel();
     }
     return;
   }
@@ -145,9 +132,7 @@ void draw() {
     for (Ghost ghost : ghosts) {
       ghost.moveGhost();
       if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
-        gameState.setGameLost();
-        gameState.displayGameLost();
-        noLoop();
+        isGameLost = true;
       // Display game lose
       }
     }
@@ -157,30 +142,17 @@ void draw() {
   keyThree.displayKey();
   keyFour.displayKey();
 
-  int keyCount = animal.numberOfKeys;
-  drawMenuBar(keyCount);
-
-  if (showMenu) {
-    drawMenuButtons();
-  }
+  drawMenuBar();
 }
 
 void keyPressed(){
   animal.moveAnimal();
   for (Ghost ghost : ghosts) {
     if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
-      gameState.setGameLost();
-      gameState.displayGameLost();
-      noLoop();
+      isGameLost = true;
       // Display game lose
     }
   }
-  if (animal.getRowNum() == endY && animal.getColNum() == endX) {
-    gameState.setGameWon();
-    gameState.displayGameWon();
-    noLoop();
-  }
-  
 }
 
 class character{
@@ -198,9 +170,8 @@ class character{
     fill(1, 1, 1);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
+    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
     ellipse(x, y, width/cols*0.618, width/cols*0.618);
-    
   }
   
   void setRowNum(int row){
@@ -360,7 +331,7 @@ class Ghost {
     fill(255, 192, 203);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
+    int y = 40 + rowNum*(height/rows)+(height/rows)/2;
     ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
@@ -431,16 +402,8 @@ class Key{
     fill(1, 1, 1);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
+    int y = rowNum*(height/rows)+(height/rows)/2;
     ellipse(x, y, 5, 5);
-    // Testing: print the End Cell
-    int realEndX = endX*(width/cols)+ (width/cols)/2;
-    int realEndY = 40 + endY*((height-menuBarHeight)/rows)+(height/rows)/2;
-    //draw an '->' at the end cell
-    fill(200, 0, 0);
-    textSize(8);
-    text("EXIT", realEndX, realEndY);
-    println("End Cell: " + endX + ", " + endY);
   }
   
   void getKey(){
@@ -450,92 +413,5 @@ class Key{
   boolean isObtained(){
     if (obtained == true) return true;
     else return false;
-  }
-}
-
-
-class GameState {
-  boolean isGameLost;
-  boolean isGameWon;
-  
-  GameState(){
-    isGameLost = false;
-    isGameWon = false;
-  }
-  
-  boolean getGameWon() {
-    return isGameWon;
-  }
-  
-  void setGameWon() {
-    isGameWon = true;
-  }
-  
-  boolean getGameLost() {
-    return isGameLost;
-  }
-  
-  void setGameLost() {
-    isGameLost = true;
-  }
-  
-  void displayGameWon() {
-    background(51);
-    textSize(50);
-    text("You won!", 300, 400);
-  }
-  
-  void displayGameLost() {
-    background(51);
-    textSize(50);
-    text("You lost!", 300, 400);
-  }
-  
-}
-
-void drawMenuButtons() {
-  menuButtonWidth = 200;
-  menuButtonHeight = 50;
-  menuRestartButtonX = (width - menuButtonWidth) / 2;
-  menuRestartButtonY = (height - menuButtonHeight * 3) / 2;
-  menuLevelButtonX = (width - menuButtonWidth) / 2;
-  menuLevelButtonY = menuRestartButtonY + menuButtonHeight + 10;
-  menuExitButtonX = (width - menuButtonWidth) / 2;
-  menuExitButtonY = menuLevelButtonY + menuButtonHeight + 10;
-
-  fill(255);
-  rect(menuRestartButtonX, menuRestartButtonY, menuButtonWidth, menuButtonHeight);
-  rect(menuLevelButtonX, menuLevelButtonY, menuButtonWidth, menuButtonHeight);
-  rect(menuExitButtonX, menuExitButtonY, menuButtonWidth, menuButtonHeight);
-
-  textSize(24);
-  fill(0);
-  textAlign(CENTER, CENTER);
-  text("Restart", menuRestartButtonX + menuButtonWidth / 2, menuRestartButtonY + menuButtonHeight / 2);
-  text("Change Level", menuLevelButtonX + menuButtonWidth / 2, menuLevelButtonY + menuButtonHeight / 2);
-  text("Exit", menuExitButtonX + menuButtonWidth / 2, menuExitButtonY + menuButtonHeight / 2);
-}
-
-void mouseClicked() {
-  if (showMenu) {
-    if (mouseX >= menuRestartButtonX && mouseX <= menuRestartButtonX + menuButtonWidth &&
-        mouseY >= menuRestartButtonY && mouseY <= menuRestartButtonY + menuButtonHeight) {
-      // Restart the game
-      setup();
-      loop();
-    } else if (mouseX >= menuLevelButtonX && mouseX <= menuLevelButtonX + menuButtonWidth &&
-               mouseY >= menuLevelButtonY && mouseY <= menuLevelButtonY + menuButtonHeight) {
-      // Change the level
-      level += 1;
-      if (level > 3) {
-        level = 1;
-      }
-      setup();
-      loop();
-    } else if (mouseX >= menuExitButtonX && mouseX <= menuExitButtonX + menuButtonWidth &&
-               mouseY >= menuExitButtonY && mouseY <= menuExitButtonY + menuButtonHeight) {
-      // Exit the game
-      exit();
-    }
   }
 }
