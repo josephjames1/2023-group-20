@@ -195,11 +195,10 @@ class character{
   }
   
   void displayAnimal(){
-    fill(1, 1, 1);
-    //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
     int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
-    ellipse(x, y, width/cols*0.618, width/cols*0.618);
+    animalDisplay.resize(width/cols,width/cols);
+    image(animalDisplay, x-width/cols*0.55, y-width/cols*0.5);
     
   }
   
