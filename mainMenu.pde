@@ -197,6 +197,20 @@ void mousePressed() {
     }
     return; // Return after checking for the menu bar button clicks
   }
+  if (mainOrGame == 2) {
+    if (isButtonClicked(pauseButtonX, pauseButtonY, buttonWidth, buttonHeight)) {
+      println("Pause button clicked");
+      isPaused = !isPaused;
+    } else if (isButtonClicked(restartButtonX, restartButtonY, buttonWidth, buttonHeight)) {
+      // Restart the game
+      println("Restart button clicked");
+      isPaused = false;
+      setup();
+    } else if (isButtonClicked(settingsButtonX, settingsButtonY, buttonWidth, buttonHeight)) {
+      // Open the settings menu
+    }
+    return; // Return after checking for the menu bar button clicks
+  }
   draw();
   
 }

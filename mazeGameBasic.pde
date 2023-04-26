@@ -157,7 +157,9 @@ void draw() {
   keyThree.displayKey();
   keyFour.displayKey();
 
-  drawMenuBar();
+  int keyCount = animal.numberOfKeys;
+  drawMenuBar(keyCount);
+
   if (showMenu) {
     drawMenuButtons();
   }
@@ -198,6 +200,7 @@ class character{
     int x = colNum*(width/cols)+ (width/cols)/2;
     int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
     ellipse(x, y, width/cols*0.618, width/cols*0.618);
+    
   }
   
   void setRowNum(int row){
