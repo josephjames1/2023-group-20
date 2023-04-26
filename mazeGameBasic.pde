@@ -109,15 +109,13 @@ void draw() {
   }
   if(mainOrGame==0){
     fill(255);
-    rect(0,0,400,500);
+    rect(0,0,800,800);
     if(step==0){
       initializeWindow();
     }else if(step==1){
-      mainGameMenu();
+      chooseAnimal();
     }else if(step==2){
-     chooseAnimal();
-    }else if(step==3){
-      chooseLevel();
+     chooseLevel();
     }
     return;
   }
