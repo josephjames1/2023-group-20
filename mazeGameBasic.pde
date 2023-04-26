@@ -1,40 +1,54 @@
 cell[][] grid;
 character animal;
-Ghost ghost;
+
+ArrayList<Ghost> ghosts;
 Key theKey;
 Key keyTwo;
 Key keyThree;
 Key keyFour;
 
-
 int cols = 11;
 int rows = 11;
 
+// keep tracking game state
+GameState gameState;
+
+int endX;
+int endY;
+
+boolean isPaused = false;
+boolean showMenu = false;
+int menuRestartButtonX, menuRestartButtonY, menuLevelButtonX, menuLevelButtonY, menuExitButtonX, menuExitButtonY;
+int menuButtonWidth, menuButtonHeight;
+
+
 void setup() {
   // Swtich game level based on user int level from mainMenu
-  int level = mainMenu.getLevel();
-  System.out.println(level);
+  int level = getLevel();
+  System.out.println("Level: "+level);
   switch (level) {
     case 1:
     {
+      rows = 11;
+      cols = 11;
       break;
     }
     case 2:
     {
-      rows += 10;
-      cols += 10;
-      
+      rows = 21;
+      cols = 21;
       break;
     }
     case 3:
     {
-      rows += 20;
-      cols += 20;
+      rows = 31;
+      cols = 31;
       break;
     }
     default: break;
   }
-  size(800, 800);
+  
+  size(800, 840);
   int rowStart = 1;
   int colStart = 1;
   grid = new cell[cols][rows];
@@ -42,44 +56,12 @@ void setup() {
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       ///intialize cell objects 
-      grid[i][j] = new cell(i*(width/cols), j*(height/rows), width/cols, height/rows, i, j);
+      grid[i][j] = new cell(i*(width/cols), 40+j*((height - menuBarHeight)/rows), width/cols, height/rows, i, j);
 
     }
   }
  
- //String[] mazeText = {
- //           " ###################",
- //           "            #      #",
- //           "###### ###### #### #",
- //           "## ### ###### #    #",
- //           "## #   #   ## # # ##",
- //           "## # ### # ## # #  #",
- //           "## #     #    # ####",
- //           "## ###### # ### ## #",
- //           "#        ## ### ## #",
- //           "###### ###### # # ##",
- //           "#      #      # #  #",
- //           "# ##### ####### # ##",
- //           "# ###    #      #  #",
- //           "# # ###### ###### ##",
- //           "# #  ##  #         #",
- //           "# ## ## ###### #####",
- //           "# #  # ##          #",
- //           "# # ## ## ###### ###",
- //           "#     ###          #",
- //           "##################  "
- //       };
- //  for (int i = 0; i < rows; i++) {
- //           for (int j = 0; j < cols; j++) {
- //               if (mazeText[i].charAt(j) == '#')
- //               {
- //                 grid[j][i].setWall();
- //               }
- //           }
- //       }
- // String[] mazeText = MazeGenerator.generateMaze(rows, cols);
-  //BetaMazeGenerator mazeGenerator = new BetaMazeGenerator(rows, cols);
-  // Generate a maze based on the int level from mainMenu
+  // Generate maze
   BetaMazeGenerator mazeGenerator = new BetaMazeGenerator(rows, cols);
   mazeGenerator.generateMaze(0, 1);
   mazeGenerator.printMaze();
@@ -92,8 +74,25 @@ void setup() {
         }
     }
   }
+
+  // Set the endX and endY
+  int end[] = mazeGenerator.getMazeExit();
+    endX = end[0];
+    endY = end[1];
+
+ // Ghost initialization
+ int ghostNumber = 2*level-1;     // Ghosts number based on level diffculty
+ ghosts = new ArrayList();
  
- ghost = new Ghost();
+
+  // Ghost assignment
+ for (int i = 0; i < ghostNumber; i++) {
+   ghosts.add(new Ghost());
+ }
+
+ 
+ gameState = new GameState();
+ 
  theKey = new Key(0, 1);
  grid[0][1].setKey(theKey);
  keyTwo = new Key();
@@ -105,6 +104,9 @@ void setup() {
 }
 
 void draw() {
+  if (isPaused) {
+    return;
+  }
   if(mainOrGame==0){
     fill(255);
     rect(0,0,400,500);
@@ -132,18 +134,52 @@ void draw() {
   }
   
   animal.displayAnimal();
-  ghost.displayGhost();
+  
+  // Display ghosts
+  for (Ghost ghost: ghosts) {
+    ghost.displayGhost();
+  }
+  
+  // Ghosts moving speed based on difficulty level
+  int ghostSpeed = 30/level;
+  if (frameCount % ghostSpeed == 0) {
+    for (Ghost ghost : ghosts) {
+      ghost.moveGhost();
+      if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
+        gameState.setGameLost();
+        gameState.displayGameLost();
+        noLoop();
+      // Display game lose
+      }
+    }
+  }
   theKey.displayKey();
   keyTwo.displayKey();
   keyThree.displayKey();
   keyFour.displayKey();
-  if (frameCount % 30 == 0) {
-    ghost.moveGhost();
+  int keyCount = animal.numberOfKeys;
+  drawMenuBar(keyCount);
+  if (showMenu) {
+    drawMenuButtons();
   }
 }
 
 void keyPressed(){
   animal.moveAnimal();
+  for (Ghost ghost : ghosts) {
+    if (ghost.isCaught(animal.getRowNum(), animal.getColNum())){
+      gameState.setGameLost();
+      gameState.displayGameLost();
+      noLoop();
+      // Display game lose
+    }
+  }
+  if (animal.getRowNum() == endY && animal.getColNum() == endX) {
+    gameState.setGameWon();
+    gameState.displayGameWon();
+    noLoop();
+  }
+  
 }
 
 class character{
@@ -161,8 +197,9 @@ class character{
     fill(1, 1, 1);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = rowNum*(height/rows)+(height/rows)/2;
+    int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
     ellipse(x, y, width/cols*0.618, width/cols*0.618);
+    
   }
   
   void setRowNum(int row){
@@ -306,6 +343,7 @@ class cell {
   
 }
 
+// Ghost class
 class Ghost {
   int rowNum;
   int colNum;
@@ -321,7 +359,7 @@ class Ghost {
     fill(255, 192, 203);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = rowNum*(height/rows)+(height/rows)/2;
+    int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
     ellipse(x, y, width/cols*0.618, width/cols*0.618);
   }
   
@@ -348,7 +386,7 @@ class Ghost {
     int moveCol = colNum;
     if (direction == 0) moveRow = int (random(-2, 2)) + rowNum;
     if (direction == 1) moveCol = int (random(-2, 2)) + colNum;
-    if (moveRow < 0 || moveRow > rows || moveCol < 0 || moveCol > cols) return;
+    if (moveRow < 0 || moveRow >= rows || moveCol < 0 || moveCol >= cols) return;
     if (!grid[moveCol][moveRow].isWall()) {
       rowNum = moveRow;
       colNum = moveCol;
@@ -358,7 +396,14 @@ class Ghost {
   boolean isMoved(){
     int number = int (random(2));
     boolean res = number == 1 ? true : false;
-    return res;
+    return true;
+ }
+ 
+ boolean isCaught(int row, int col) {
+   if (rowNum == row && colNum == col) {
+     return true;
+   }
+   return false;
  }
 }
 
@@ -385,8 +430,16 @@ class Key{
     fill(1, 1, 1);
     //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
-    int y = rowNum*(height/rows)+(height/rows)/2;
+    int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
     ellipse(x, y, 5, 5);
+    // Testing: print the End Cell
+    int realEndX = endX*(width/cols)+ (width/cols)/2;
+    int realEndY = 40 + endY*((height-menuBarHeight)/rows)+(height/rows)/2;
+    //draw an '->' at the end cell
+    fill(200, 0, 0);
+    textSize(8);
+    text("EXIT", realEndX, realEndY);
+    println("End Cell: " + endX + ", " + endY);
   }
   
   void getKey(){
@@ -396,5 +449,92 @@ class Key{
   boolean isObtained(){
     if (obtained == true) return true;
     else return false;
+  }
+}
+
+
+class GameState {
+  boolean isGameLost;
+  boolean isGameWon;
+  
+  GameState(){
+    isGameLost = false;
+    isGameWon = false;
+  }
+  
+  boolean getGameWon() {
+    return isGameWon;
+  }
+  
+  void setGameWon() {
+    isGameWon = true;
+  }
+  
+  boolean getGameLost() {
+    return isGameLost;
+  }
+  
+  void setGameLost() {
+    isGameLost = true;
+  }
+  
+  void displayGameWon() {
+    background(51);
+    textSize(50);
+    text("You won!", 300, 400);
+  }
+  
+  void displayGameLost() {
+    background(51);
+    textSize(50);
+    text("You lost!", 300, 400);
+  }
+  
+}
+
+void drawMenuButtons() {
+  menuButtonWidth = 200;
+  menuButtonHeight = 50;
+  menuRestartButtonX = (width - menuButtonWidth) / 2;
+  menuRestartButtonY = (height - menuButtonHeight * 3) / 2;
+  menuLevelButtonX = (width - menuButtonWidth) / 2;
+  menuLevelButtonY = menuRestartButtonY + menuButtonHeight + 10;
+  menuExitButtonX = (width - menuButtonWidth) / 2;
+  menuExitButtonY = menuLevelButtonY + menuButtonHeight + 10;
+
+  fill(255);
+  rect(menuRestartButtonX, menuRestartButtonY, menuButtonWidth, menuButtonHeight);
+  rect(menuLevelButtonX, menuLevelButtonY, menuButtonWidth, menuButtonHeight);
+  rect(menuExitButtonX, menuExitButtonY, menuButtonWidth, menuButtonHeight);
+
+  textSize(24);
+  fill(0);
+  textAlign(CENTER, CENTER);
+  text("Restart", menuRestartButtonX + menuButtonWidth / 2, menuRestartButtonY + menuButtonHeight / 2);
+  text("Change Level", menuLevelButtonX + menuButtonWidth / 2, menuLevelButtonY + menuButtonHeight / 2);
+  text("Exit", menuExitButtonX + menuButtonWidth / 2, menuExitButtonY + menuButtonHeight / 2);
+}
+
+void mouseClicked() {
+  if (showMenu) {
+    if (mouseX >= menuRestartButtonX && mouseX <= menuRestartButtonX + menuButtonWidth &&
+        mouseY >= menuRestartButtonY && mouseY <= menuRestartButtonY + menuButtonHeight) {
+      // Restart the game
+      setup();
+      loop();
+    } else if (mouseX >= menuLevelButtonX && mouseX <= menuLevelButtonX + menuButtonWidth &&
+               mouseY >= menuLevelButtonY && mouseY <= menuLevelButtonY + menuButtonHeight) {
+      // Change the level
+      level += 1;
+      if (level > 3) {
+        level = 1;
+      }
+      setup();
+      loop();
+    } else if (mouseX >= menuExitButtonX && mouseX <= menuExitButtonX + menuButtonWidth &&
+               mouseY >= menuExitButtonY && mouseY <= menuExitButtonY + menuButtonHeight) {
+      // Exit the game
+      exit();
+    }
   }
 }
