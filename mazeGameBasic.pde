@@ -6,6 +6,9 @@ Key theKey;
 Key keyTwo;
 Key keyThree;
 Key keyFour;
+PImage grass;
+PImage fence;
+
 
 int cols = 11;
 int rows = 11;
@@ -23,6 +26,8 @@ int menuButtonWidth, menuButtonHeight;
 
 
 void setup() {
+  grass=loadImage("grass.png");
+  fence=loadImage("fence.png");
   playAudio();
   // Swtich game level based on user int level from mainMenu
   int level = getLevel();
@@ -30,18 +35,24 @@ void setup() {
   switch (level) {
     case 1:
     {
+      grass.resize(75, 75);
+      fence.resize(75, 75);
       rows = 11;
       cols = 11;
       break;
     }
     case 2:
     {
+      grass.resize(50, 50);
+      fence.resize(40, 40);
       rows = 21;
       cols = 21;
       break;
     }
     case 3:
     {
+      grass.resize(25, 25);
+      fence.resize(25, 25);
       rows = 31;
       cols = 31;
       break;
@@ -195,11 +206,10 @@ class character{
   }
   
   void displayAnimal(){
-    fill(1, 1, 1);
-    //this puts the ellipse in the center of its current cell
     int x = colNum*(width/cols)+ (width/cols)/2;
     int y = 40 + rowNum*((height-menuBarHeight)/rows)+(height/rows)/2;
-    ellipse(x, y, width/cols*0.618, width/cols*0.618);
+    animalDisplay.resize(width/cols,width/cols);
+    image(animalDisplay, x-width/cols*0.55, y-width/cols*0.5);
     
   }
   
@@ -241,7 +251,7 @@ class character{
       }
       if (grid[colNum][rowNum+1].isWall() && numberOfKeys <= 0){
           return;
-        }
+       }
       rowNum = rowNum+1;
     } 
 
@@ -304,15 +314,17 @@ class cell {
   } 
 
   void displayOpen() {
-    stroke(0, 0, 0);
-    fill(255, 255, 255); 
-    rect(x, y, w, h);
+    image(grass, x, y);
+    //stroke(0, 0, 0);
+    //fill(255, 255, 255); 
+    //rect(x, y, w, h);
   }
   
   void displayWall() {
-    stroke(0, 0, 0);
-    fill(0, 0, 0); 
-    rect(x, y, w, h);
+    image(fence, x, y);
+    //stroke(0, 0, 0);
+    //fill(150, 75, 0); 
+    //rect(x, y, w, h);
   }
   
   boolean isWall(){
