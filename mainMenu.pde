@@ -59,11 +59,6 @@ void initializeWindow()
 void chooseAnimal()
 {
   initialBackGround("background4.jpeg");
-  
-  if(role!=0){
-    animalDisplay.resize(200, 200);
-    image(animalDisplay, 550, 500);
-  }
   x=loadImage("x.png");
   x.resize(20, 20);
   image(x, 0, 0);
@@ -80,10 +75,6 @@ void chooseAnimal()
   ratWord.resize(200, 100);
   image(ratWord, 300, 550);
   
-  continueWord=loadImage("continue.png");
-  continueWord.resize(100, 40);
-  image(continueWord, 600, 700);
-  
   returnWord=loadImage("return.png");
   returnWord.resize(100, 40);
   image(returnWord, 100, 700);
@@ -97,6 +88,11 @@ void chooseAnimal()
 void chooseLevel()
 {
   initialBackGround("background4.jpeg");
+  if(role!=0){
+    animalDisplay.resize(200, 200);
+    image(animalDisplay, 550, 500);
+  }
+  
   easy=loadImage("easy.png");
   easy.resize(200, 100);
   image(easy, 300, 250);
@@ -155,7 +151,7 @@ void mousePressed() {
       role=3;
     }
     
-    if(role!=0 && mouseX >= 600 && mouseX <= 600+continueWord.width && mouseY >= 700 && mouseY <= 700+continueWord.height){
+    if(role!=0){
       step=2;
     }
     
