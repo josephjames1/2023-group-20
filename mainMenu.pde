@@ -109,10 +109,6 @@ void chooseLevel()
   ratWord.resize(100, 40);
   image(ratWord, 100, 700);
   
-  continueWord=loadImage("continue.png");
-  continueWord.resize(100, 40);
-  image(continueWord, 600, 700);
-  
   PImage img1=loadImage("level.png");
   img1.resize(300, 100);
   image(img1, 250, 100);
@@ -166,23 +162,18 @@ void mousePressed() {
  
   if(step==2){
     if (mouseX >= 300 && mouseX <= 300+easy.width && mouseY >= 250 && mouseY <= 250+easy.height) {
-      levelDisplay=loadImage("easyRed.png");
       level=1;
       setup();
     }else if (mouseX >= 300 && mouseX <= 300+easy.width && mouseY >= 400 && mouseY <= 400+easy.height) {
-      levelDisplay=loadImage("mediumRed.png");
       level=2;
       setup();
     }else if (mouseX >= 300 && mouseX <= 300+easy.width && mouseY >= 550 && mouseY <= 550+easy.height) {
-      levelDisplay=loadImage("hardRed.png");
       level=3;
       setup();
     }
-    
-    if(mouseX >= 600 && mouseX <= 600+continueWord.width && mouseY >= 700 && mouseY <= 700+continueWord.height){
-      if(level!=0){
-        mainOrGame=1;
-      }
+
+    if(level!=0){
+       mainOrGame=1;
     }
     
     if(mouseX >= 100 && mouseX <= 100+returnWord.width && mouseY >= 700 && mouseY <= 700+returnWord.height){
